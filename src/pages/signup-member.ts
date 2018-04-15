@@ -3,7 +3,6 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {LoadingController, NavController} from "ionic-angular";
 import {ToastService} from "../app/services/toast-service";
 import {Repository} from "../app/repository/repository";
-import {Service} from "../app/services/service";
 
 @Component({
   selector: 'page-add-member',
@@ -52,7 +51,7 @@ import {Service} from "../app/services/service";
               <ion-label>Female</ion-label>
               <ion-radio value="F"></ion-radio>
             </ion-item>
-          </ion-list>  
+          </ion-list>
         </div>
         <ion-item style="margin-top:8px;">
           <ion-label>Notify Member of Visitor</ion-label>
@@ -84,8 +83,9 @@ export class SignupMemberPage {
   mobile: FormControl;
   gender: FormControl;
   notificationMember: FormControl;
-  constructor( public navCtrl:NavController,private toast:ToastService ,
-               private repository:Repository, private loadingCtrl:LoadingController, private service: Service) {
+
+  constructor(public navCtrl: NavController, private toast: ToastService,
+              private repository: Repository, private loadingCtrl: LoadingController) {
     this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
     this.email = new FormControl(null, [Validators.required, , Validators.email]);
     this.mobile = new FormControl(null, [Validators.required,
@@ -98,7 +98,7 @@ export class SignupMemberPage {
       email: this.email,
       mobile: this.mobile,
       gender: this.gender,
-      is_notification_member : this.notificationMember
+      is_notification_member: this.notificationMember
     })
   }
 
@@ -107,24 +107,24 @@ export class SignupMemberPage {
     this.signupForm.patchValue({gender: value});
   }
 
-  notificationChanged(value){
+  notificationChanged(value) {
     console.log(value.value);
-    if(value.value == false){
-      this.signupForm.patchValue({is_notification_member:'false'});
+    if (value.value == false) {
+      this.signupForm.patchValue({is_notification_member: 'false'});
     }
-    else{
-      this.signupForm.patchValue({is_notification_member:'true'});
+    else {
+      this.signupForm.patchValue({is_notification_member: 'true'});
     }
   }
 
   addMember() {
-    // this.service.addMember(this.signupForm.value).subscribe(res => {
-    //   this.navCtrl.pop();
-    //   this.toast.success('Member Added Successfully');
-    //   },
-    //   err => {
-    //     console.log(err);
-    //     this.toast.error(err.message);
-    //   })
+    this.repository.addMember(this.signupForm.value).subscribe(res => {
+        this.navCtrl.pop();
+        this.toast.success('Member Added Successfully');
+      },
+      err => {
+        console.log(err);
+        this.toast.error(err.message);
+      })
   }
 }

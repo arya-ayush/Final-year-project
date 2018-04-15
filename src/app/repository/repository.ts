@@ -4,6 +4,12 @@ import {Store} from "@ngrx/store";
 import {RootState} from "../reducers";
 import {User} from "../models/user";
 import {Observable} from "rxjs/Observable";
+import {Member} from "../models/member";
+import {MemberAddAction, MembersLoadAction, MembersLoadedAction} from "../actions/member";
+import {getMembers, membersLoaded, membersLoading} from "../reducers/member";
+import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/filter';
 
 
 @Injectable()
@@ -11,7 +17,7 @@ export class Repository {
   constructor(private service: Service, private store: Store<RootState>) {
   }
 
-  logout(){
+  logout() {
     this.service.logout();
   }
 
@@ -24,22 +30,40 @@ export class Repository {
   }
 
   loginUser(data: { username: string, password: string }): Observable<User> {
-    return this.service.loginUser(data).map((res:User) =>{
+    return this.service.loginUser(data).map((res: User) => {
       return res;
     });
   }
 
   loginAdmin(data: { username: string, password: string }): Observable<User> {
-    return this.service.loginAdmin(data).map((res:User) =>{
+    return this.service.loginAdmin(data).map((res: User) => {
       return res;
     });
   }
 
-  addMember(data) {
+  addMember(data): Observable<Member> {
     return this.service.addMember(data)
-    //.map((res: Member) => {
-    //this.store.dispatch(new MemberAddAction(res));
-    //return res;
-    //});
+      .map((res: Member) => {
+        this.store.dispatch(new MemberAddAction(res));
+        return res;
+      });
+  }
+
+  getMembers(): [Observable<Member[]>, Observable<boolean>] {
+    const loading$ = this.store.select(membersLoading);
+    const loaded$ = this.store.select(membersLoaded);
+    const members$ = this.store.select(getMembers);
+
+    loading$.combineLatest(loaded$, (loading, loaded) => loading || loaded)
+      .take(1).filter(v => !v).subscribe(() => {
+      this.store.dispatch(new MembersLoadAction());
+      console.log('member load action');
+      this.service.loadMembers().subscribe(members => {
+        console.log('member loaded action');
+        this.store.dispatch(new MembersLoadedAction(members));
+      });
+    });
+
+    return [members$, loading$];
   }
 }

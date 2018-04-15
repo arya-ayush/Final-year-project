@@ -36,7 +36,7 @@ import {BackgroundMode} from "@ionic-native/background-mode";
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpClientModule,
-    StoreModule.forRoot(rootReducer)
+    StoreModule.forRoot(rootReducer),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
