@@ -1,11 +1,11 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { SplashScreen } from '@ionic-native/splash-screen';
-import { StatusBar } from '@ionic-native/status-bar';
+import {BrowserModule} from '@angular/platform-browser';
+import {ErrorHandler, NgModule} from '@angular/core';
+import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
+import {SplashScreen} from '@ionic-native/splash-screen';
+import {StatusBar} from '@ionic-native/status-bar';
 
-import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
+import {MyApp} from './app.component';
+import {HomePage} from '../pages/home/home';
 import {ToastService} from "./services/toast-service";
 import {NetworkService} from "./services/network";
 import {Network} from "@ionic-native/network";
@@ -21,6 +21,9 @@ import {AddMemberPage} from "../pages/add-member";
 import {Repository} from "./repository/repository";
 import {BackButtonService} from "./services/back-button";
 import {BackgroundMode} from "@ionic-native/background-mode";
+import {DatePicker} from "@ionic-native/date-picker";
+import {VisitorLogPage} from "../pages/visitor-log";
+import {DatePipe} from "@angular/common";
 
 @NgModule({
   declarations: [
@@ -30,7 +33,8 @@ import {BackgroundMode} from "@ionic-native/background-mode";
     ProfilePage,
     AdminHomePage,
     SignupMemberPage,
-    AddMemberPage
+    AddMemberPage,
+    VisitorLogPage
   ],
   imports: [
     BrowserModule,
@@ -46,7 +50,8 @@ import {BackgroundMode} from "@ionic-native/background-mode";
     ProfilePage,
     AdminHomePage,
     SignupMemberPage,
-    AddMemberPage
+    AddMemberPage,
+    VisitorLogPage
   ],
   providers: [
     StatusBar,
@@ -58,7 +63,10 @@ import {BackgroundMode} from "@ionic-native/background-mode";
     Repository,
     BackButtonService,
     BackgroundMode,
+    DatePicker,
+    [DatePipe],
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
-export class AppModule {}
+export class AppModule {
+}

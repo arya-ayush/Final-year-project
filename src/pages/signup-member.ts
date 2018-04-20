@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {LoadingController, NavController} from "ionic-angular";
+import {NavController} from "ionic-angular";
 import {ToastService} from "../app/services/toast-service";
 import {Repository} from "../app/repository/repository";
 
@@ -85,7 +85,7 @@ export class SignupMemberPage {
   notificationMember: FormControl;
 
   constructor(public navCtrl: NavController, private toast: ToastService,
-              private repository: Repository, private loadingCtrl: LoadingController) {
+              private repository: Repository) {
     this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
     this.email = new FormControl(null, [Validators.required, , Validators.email]);
     this.mobile = new FormControl(null, [Validators.required,

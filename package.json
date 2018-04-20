@@ -23,6 +23,7 @@
     "@angular/platform-browser-dynamic": "5.2.9",
     "@ionic-native/background-mode": "^4.7.0",
     "@ionic-native/core": "4.6.0",
+    "@ionic-native/date-picker": "^4.7.0",
     "@ionic-native/network": "^4.6.0",
     "@ionic-native/splash-screen": "4.6.0",
     "@ionic-native/status-bar": "4.6.0",
@@ -31,6 +32,7 @@
     "@ngrx/store": "^5.2.0",
     "cordova-android": "7.0.0",
     "cordova-plugin-background-mode": "^0.7.2",
+    "cordova-plugin-datepicker": "^0.9.3",
     "cordova-plugin-device": "^2.0.1",
     "cordova-plugin-ionic-keyboard": "^2.0.5",
     "cordova-plugin-ionic-webview": "^1.2.0",
@@ -57,7 +59,8 @@
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-ionic-webview": {},
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-background-mode": {}
+      "cordova-plugin-background-mode": {},
+      "cordova-plugin-datepicker": {}
     },
     "platforms": [
       "android"
