@@ -5,6 +5,7 @@ import {LoadingController} from "ionic-angular";
 import {User} from "../models/user";
 import {Observable} from "rxjs/Observable";
 import {Member} from "../models/member";
+import {Visitor} from "../models/visitor";
 
 const BASE_URL = 'http://vallabh-final.herokuapp.com/';
 
@@ -76,6 +77,12 @@ export class Service {
     });
   }
 
+  getVisitor(date) : Observable<Visitor[]>{
+    console.log(date);
+    return this.http.get(BASE_URL+`flat/visitors?date=${date}`,{headers:this.getHeaders()}).map((res) => {
+      return <Visitor[]> res;
+    });
+  }
   private getHeaders(): { [header: string]: string | string[] } {
     const token = JSON.parse(localStorage.getItem('user')).token;
     console.log('Token Is' + token);

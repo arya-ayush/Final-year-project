@@ -10,6 +10,7 @@ import {getMembers, membersLoaded, membersLoading} from "../reducers/member";
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/filter';
+import {Visitor} from "../models/visitor";
 
 
 @Injectable()
@@ -65,5 +66,12 @@ export class Repository {
     });
 
     return [members$, loading$];
+  }
+
+  getVisitor(date): Observable<Visitor[]>{
+    console.log(date);
+    return this.service.getVisitor(date).map((res) => {
+      return <Visitor[]>res;
+    });
   }
 }

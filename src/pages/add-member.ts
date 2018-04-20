@@ -15,7 +15,7 @@ import {Repository} from "../app/repository/repository";
     <ion-content>
       <ion-grid>
         <ion-row>
-          <ion-col col-sm-12 col-md-4 md-offset-4>
+          <ion-col *ngIf="length>0 && !loading" col-sm-12 col-md-4 md-offset-4>
             <ion-card *ngFor="let member of members"> 
               <ion-card-content>
                 <ion-item>
@@ -33,6 +33,9 @@ import {Repository} from "../app/repository/repository";
               </ion-card-content>
             </ion-card>
           </ion-col>
+          <ion-col style="margin-top:38vh;" *ngIf="length==0 && !loading" col-sm-12 col-md-4 md-offset-4>
+            <h3>You have not added any member yet</h3>
+          </ion-col>
         </ion-row>
       </ion-grid>
       <ion-fab right bottom padding>
@@ -47,7 +50,9 @@ import {Repository} from "../app/repository/repository";
   `]
 })
 export class AddMemberPage implements OnInit{
-  members : Member[] = []
+  members : Member[] = [];
+  loading = false;
+  length: number;
   constructor(public navCtrl: NavController,public repository: Repository) {
   }
 
@@ -56,9 +61,12 @@ export class AddMemberPage implements OnInit{
   }
 
   ngOnInit(){
+    this.loading = true;
     const members$ = this.repository.getMembers();
     members$[0].subscribe(members => {
       this.members = members;
+      this.length = this.members.length;
+      this.loading = false;
     });
   }
 
