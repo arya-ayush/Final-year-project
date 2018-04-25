@@ -24,6 +24,7 @@ import {BackgroundMode} from "@ionic-native/background-mode";
 import {DatePicker} from "@ionic-native/date-picker";
 import {VisitorLogPage} from "../pages/visitor-log";
 import {DatePipe} from "@angular/common";
+import {NotificationMemberPage} from "../pages/notification-member";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {DatePipe} from "@angular/common";
     AdminHomePage,
     SignupMemberPage,
     AddMemberPage,
-    VisitorLogPage
+    VisitorLogPage,
+    NotificationMemberPage
   ],
   imports: [
     BrowserModule,
@@ -51,7 +53,8 @@ import {DatePipe} from "@angular/common";
     AdminHomePage,
     SignupMemberPage,
     AddMemberPage,
-    VisitorLogPage
+    VisitorLogPage,
+    NotificationMemberPage
   ],
   providers: [
     StatusBar,

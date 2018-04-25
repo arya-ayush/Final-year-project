@@ -11,6 +11,7 @@ import {Repository} from "../app/repository/repository";
   template: `
 
     <ion-content padding>
+      <img padding style="margin-top: 40px;" src="./assets/imgs/homantra.png"/>
       <div>
         <form [formGroup]="loginForm" (submit)="loginForm.valid ">
           <ion-grid>
@@ -41,7 +42,7 @@ import {Repository} from "../app/repository/repository";
               </button>
               <button style="width:40%" ion-button round outline small type="button"
                       [disabled]="!loginForm.valid && loginForm.touched " (click)="loginAdmin()">
-                Login as Admin
+                Login as Society
               </button>
             </div>
           </ion-grid>

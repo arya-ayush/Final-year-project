@@ -69,9 +69,14 @@ export class Repository {
   }
 
   getVisitor(date): Observable<Visitor[]>{
-    console.log(date);
     return this.service.getVisitor(date).map((res) => {
       return <Visitor[]>res;
     });
   }
+
+  // getNotificationMember(): Observable<Member[]>{
+  //   return this.service.getNotificationVisitor.map((res) => {
+  //     return <Member[]>res;
+  //   })
+  // }
 }

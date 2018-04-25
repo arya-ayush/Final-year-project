@@ -15,10 +15,8 @@ export class Service {
   }
 
   loginUser(data: { username: string, password: string }): any {
-    console.log(data);
     return this.http.post(BASE_URL + 'signin/owneruser', {'username': data.username, 'password': data.password}, {})
       .map(response => {
-        console.log(response);
         localStorage.setItem('user', JSON.stringify(response));
         return <User>response;
       });
@@ -28,7 +26,6 @@ export class Service {
   loginAdmin(data: { username: string, password: string }): any {
     return this.http.post(BASE_URL + 'signin/admin', {'username': data.username, 'password': data.password}, {})
       .map(response => {
-        console.log(response);
         localStorage.setItem('admin', JSON.stringify(response));
         return <User>response;
       });
@@ -78,14 +75,12 @@ export class Service {
   }
 
   getVisitor(date) : Observable<Visitor[]>{
-    console.log(date);
     return this.http.get(BASE_URL+`flat/visitors?date=${date}`,{headers:this.getHeaders()}).map((res) => {
       return <Visitor[]> res;
     });
   }
   private getHeaders(): { [header: string]: string | string[] } {
     const token = JSON.parse(localStorage.getItem('user')).token;
-    console.log('Token Is' + token);
     return token ? {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'} : {};
   }
 

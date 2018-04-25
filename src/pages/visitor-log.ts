@@ -36,7 +36,7 @@ import {ToastService} from "../app/services/toast-service";
             </ion-card>
           </ion-col>
           <ion-col style="margin-top:38vh;" *ngIf="length==0 && !loading" col-sm-12 col-md-4 md-offset-4>
-            <h3>No visitors on your selected date</h3>
+            <p>No visitors on your selected date</p>
           </ion-col>
           
         </ion-row>

@@ -34,7 +34,7 @@ import {Repository} from "../app/repository/repository";
             </ion-card>
           </ion-col>
           <ion-col style="margin-top:38vh;" *ngIf="length==0 && !loading" col-sm-12 col-md-4 md-offset-4>
-            <h3>You have not added any member yet</h3>
+            <p>You have not added any member yet</p>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -52,7 +52,7 @@ import {Repository} from "../app/repository/repository";
 export class AddMemberPage implements OnInit{
   members : Member[] = [];
   loading = false;
-  length: number;
+  length: number = 0;
   constructor(public navCtrl: NavController,public repository: Repository) {
   }
 

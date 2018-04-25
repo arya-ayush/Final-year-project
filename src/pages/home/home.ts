@@ -5,6 +5,7 @@ import {AddMemberPage} from "../add-member";
 import {DatePicker} from "@ionic-native/date-picker";
 import {ToastService} from "../../app/services/toast-service";
 import {VisitorLogPage} from "../visitor-log";
+import {NotificationMemberPage} from "../notification-member";
 
 @Component({
   selector: 'page-home',
@@ -22,6 +23,10 @@ export class HomePage {
 
   add() {
     this.navCtrl.push(AddMemberPage);
+  }
+
+  notification(){
+    this.navCtrl.push(NotificationMemberPage);
   }
 
   visitorLog(){
