@@ -5,7 +5,10 @@ import {RootState} from "../reducers";
 import {User} from "../models/user";
 import {Observable} from "rxjs/Observable";
 import {Member} from "../models/member";
-import {MemberAddAction, MembersLoadAction, MembersLoadedAction} from "../actions/member";
+import {
+  MemberAddAction, MemberDeleteAction, MembersLoadAction, MembersLoadedAction,
+  MemberUpdateAction
+} from "../actions/member";
 import {getMembers, membersLoaded, membersLoading} from "../reducers/member";
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/take';
@@ -50,6 +53,19 @@ export class Repository {
       });
   }
 
+  deleteMember(id: number): Observable<Member> {
+    return this.service.deleteMember(id).map((res: Member) => {
+      this.store.dispatch(new MemberDeleteAction(id));
+      return res;
+    });
+  }
+
+  updateMember(memberId: number, data): Observable<Member> {
+    return this.service.updateMember(memberId, data).map((res: Member) => {
+      this.store.dispatch(new MemberUpdateAction(res));
+      return res;
+    });
+  }
   getMembers(): [Observable<Member[]>, Observable<boolean>] {
     const loading$ = this.store.select(membersLoading);
     const loaded$ = this.store.select(membersLoaded);
@@ -58,9 +74,7 @@ export class Repository {
     loading$.combineLatest(loaded$, (loading, loaded) => loading || loaded)
       .take(1).filter(v => !v).subscribe(() => {
       this.store.dispatch(new MembersLoadAction());
-      console.log('member load action');
       this.service.loadMembers().subscribe(members => {
-        console.log('member loaded action');
         this.store.dispatch(new MembersLoadedAction(members));
       });
     });
@@ -74,9 +88,9 @@ export class Repository {
     });
   }
 
-  // getNotificationMember(): Observable<Member[]>{
-  //   return this.service.getNotificationVisitor.map((res) => {
-  //     return <Member[]>res;
-  //   })
-  // }
+  getNotificationMember(): Observable<Member[]>{
+    return this.service.getNotificationMember().map((res) => {
+      return <Member[]>res;
+    })
+  }
 }

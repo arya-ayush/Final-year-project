@@ -1,15 +1,16 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {NavController} from "ionic-angular";
+import {NavController, NavParams} from "ionic-angular";
 import {ToastService} from "../app/services/toast-service";
 import {Repository} from "../app/repository/repository";
+import {Member} from "../app/models/member";
 
 @Component({
   selector: 'page-add-member',
   template: `
     <ion-header>
       <ion-navbar>
-        <ion-title>Add Member</ion-title>
+        <ion-title>{{text}}</ion-title>
       </ion-navbar>
     </ion-header>
     <ion-content padding>
@@ -45,17 +46,17 @@ import {Repository} from "../app/repository/repository";
           <ion-list radio-group (ionChange)="genderChanged($event)" margin-top no-lines style="margin-bottom:6px;">
             <ion-item>
               <ion-label>Male</ion-label>
-              <ion-radio value="M" checked></ion-radio>
+              <ion-radio value="M" [checked]="!member || member.gender=='M' "></ion-radio>
             </ion-item>
             <ion-item>
               <ion-label>Female</ion-label>
-              <ion-radio value="F"></ion-radio>
+              <ion-radio value="F" [checked]="member && member.gender=='F' "></ion-radio>
             </ion-item>
           </ion-list>
         </div>
         <ion-item style="margin-top:8px;">
           <ion-label>Notify Member of Visitor</ion-label>
-          <ion-toggle (ionChange)="notificationChanged($event)"></ion-toggle>
+          <ion-toggle [(ngModel)]='default' [ngModelOptions]="{standalone: true}" (ionChange)="notificationChanged($event)"></ion-toggle>
         </ion-item>
         <div style="height:10px"></div>
         <ion-grid>
@@ -63,7 +64,7 @@ import {Repository} from "../app/repository/repository";
             <ion-col col-md-5 col-sm-4></ion-col>
             <ion-col>
               <button [disabled]="!signupForm.valid && signupForm.touched " ion-button type="submit" outline round>
-                Add Member
+                {{text}}
               </button>
             </ion-col>
             <ion-col col-md-5 col-sm-4></ion-col>
@@ -83,15 +84,26 @@ export class SignupMemberPage {
   mobile: FormControl;
   gender: FormControl;
   notificationMember: FormControl;
-
+  member;
+  text: string;
+  default: boolean;
   constructor(public navCtrl: NavController, private toast: ToastService,
-              private repository: Repository) {
-    this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
-    this.email = new FormControl(null, [Validators.required, , Validators.email]);
-    this.mobile = new FormControl(null, [Validators.required,
+              private repository: Repository , private navParams:NavParams) {
+    this.member = this.navParams.get('member');
+    if(this.member){
+      this.text = 'Update Member';
+      this.default = this.member.is_notification_member;
+    }
+    else{
+      this.text = 'Add Member';
+      this.default = false;
+    }
+    this.name = new FormControl(this.member? this.member.name : null, [Validators.required, Validators.minLength(3)]);
+    this.email = new FormControl(this.member? this.member.email : null, [Validators.required, , Validators.email]);
+    this.mobile = new FormControl(this.member? this.member.phone : null, [Validators.required,
       Validators.minLength(10), Validators.maxLength(10)]);
-    this.gender = new FormControl('M', [Validators.required]);
-    this.notificationMember = new FormControl('False', [Validators.required]);
+    this.gender = new FormControl(this.member? this.member.gender :'M', [Validators.required]);
+    this.notificationMember = new FormControl(this.member? this.member.is_notification_member :'False', [Validators.required]);
 
     this.signupForm = new FormGroup({
       name: this.name,
@@ -103,12 +115,10 @@ export class SignupMemberPage {
   }
 
   genderChanged(value) {
-    console.log(value);
     this.signupForm.patchValue({gender: value});
   }
 
   notificationChanged(value) {
-    console.log(value.value);
     if (value.value == false) {
       this.signupForm.patchValue({is_notification_member: 'false'});
     }
@@ -118,13 +128,23 @@ export class SignupMemberPage {
   }
 
   addMember() {
-    this.repository.addMember(this.signupForm.value).subscribe(res => {
+    if(this.member){
+      this.repository.updateMember(this.member.id , this.signupForm.value).subscribe(res =>{
         this.navCtrl.pop();
-        this.toast.success('Member Added Successfully');
+        this.toast.success('Member Updated Successfully');
       },
-      err => {
-        console.log(err);
+        err => {
         this.toast.error(err.message);
-      })
+        })
+    }
+    else{
+      this.repository.addMember(this.signupForm.value).subscribe(res => {
+          this.navCtrl.pop();
+          this.toast.success('Member Added Successfully');
+        },
+        err => {
+          this.toast.error(err.message);
+        })
+    }
   }
 }

@@ -14,25 +14,9 @@ export class Service {
   constructor(private http: HttpClient, private loadingCtrl: LoadingController) {
   }
 
-  loginUser(data: { username: string, password: string }): any {
-    return this.http.post(BASE_URL + 'signin/owneruser', {'username': data.username, 'password': data.password}, {})
-      .map(response => {
-        localStorage.setItem('user', JSON.stringify(response));
-        return <User>response;
-      });
-  }
-
-
-  loginAdmin(data: { username: string, password: string }): any {
-    return this.http.post(BASE_URL + 'signin/admin', {'username': data.username, 'password': data.password}, {})
-      .map(response => {
-        localStorage.setItem('admin', JSON.stringify(response));
-        return <User>response;
-      });
-  }
-
-  logout() {
-    localStorage.clear();
+  private getHeaders(): { [header: string]: string | string[] } {
+    const token = JSON.parse(localStorage.getItem('user')).token;
+    return token ? {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'} : {};
   }
 
   hasLoginTokenUser(): boolean {
@@ -48,6 +32,28 @@ export class Service {
     }
     return false;
   }
+
+  loginUser(data: { username: string, password: string }): any {
+    return this.http.post(BASE_URL + 'signin/owneruser', {'username': data.username, 'password': data.password}, {})
+      .map(response => {
+        localStorage.setItem('user', JSON.stringify(response));
+        return <User>response;
+      });
+  }
+
+  loginAdmin(data: { username: string, password: string }): any {
+    return this.http.post(BASE_URL + 'signin/admin', {'username': data.username, 'password': data.password}, {})
+      .map(response => {
+        localStorage.setItem('admin', JSON.stringify(response));
+        return <User>response;
+      });
+  }
+
+  logout() {
+    localStorage.clear();
+  }
+
+
 
   addMember(data) : Observable<Member>{
     const loader = this.loadingCtrl.create({
@@ -74,16 +80,41 @@ export class Service {
     });
   }
 
+  deleteMember(memberId: number): Observable<Member> {
+    const loader = this.loadingCtrl.create({
+      content: 'Deleting Member...'
+    });
+    loader.present();
+    return this.http.delete(BASE_URL+`member/${memberId}` , {headers:this.getHeaders()}).map(res => {
+      loader.dismiss();
+      return <Member>res;
+    });
+  }
+
   getVisitor(date) : Observable<Visitor[]>{
     return this.http.get(BASE_URL+`flat/visitors?date=${date}`,{headers:this.getHeaders()}).map((res) => {
       return <Visitor[]> res;
     });
   }
-  private getHeaders(): { [header: string]: string | string[] } {
-    const token = JSON.parse(localStorage.getItem('user')).token;
-    return token ? {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'} : {};
+
+  updateMember(memberId: number, data): Observable<Member> {
+    const loader = this.loadingCtrl.create({
+      content: 'Updating Member...'
+    });
+    loader.present();
+    return this.http.put(BASE_URL+ `member/${memberId}`,
+      {"name":data.name,"email":data.email,"phone":data.mobile,
+        "gender":data.gender,"is_notification_member":data.is_notification_member},
+      { headers:this.getHeaders(),params:{}}).map(res => {
+      loader.dismiss();
+      return <Member>res;
+    })
   }
 
-
+  getNotificationMember() : Observable<Member[]>{
+    return this.http.get(BASE_URL+'members?notification=YES',{headers: this.getHeaders()}).map((res) => {
+      return <Member[]>res;
+    });
+  }
 
 }
