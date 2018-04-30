@@ -25,6 +25,8 @@ import {DatePicker} from "@ionic-native/date-picker";
 import {VisitorLogPage} from "../pages/visitor-log";
 import {DatePipe} from "@angular/common";
 import {NotificationMemberPage} from "../pages/notification-member";
+import {AddFlatOwnerPage} from "../pages/Admin/add-flat-owner";
+import {AddVisitorPage} from "../pages/Admin/add-visitor";
 
 @NgModule({
   declarations: [
@@ -36,7 +38,9 @@ import {NotificationMemberPage} from "../pages/notification-member";
     SignupMemberPage,
     AddMemberPage,
     VisitorLogPage,
-    NotificationMemberPage
+    NotificationMemberPage,
+    AddFlatOwnerPage,
+    AddVisitorPage
   ],
   imports: [
     BrowserModule,
@@ -54,7 +58,9 @@ import {NotificationMemberPage} from "../pages/notification-member";
     SignupMemberPage,
     AddMemberPage,
     VisitorLogPage,
-    NotificationMemberPage
+    NotificationMemberPage,
+    AddFlatOwnerPage,
+    AddVisitorPage
   ],
   providers: [
     StatusBar,

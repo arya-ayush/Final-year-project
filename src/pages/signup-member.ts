@@ -1,9 +1,8 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {NavController, NavParams} from "ionic-angular";
+import {LoadingController, NavController, NavParams} from "ionic-angular";
 import {ToastService} from "../app/services/toast-service";
 import {Repository} from "../app/repository/repository";
-import {Member} from "../app/models/member";
 
 @Component({
   selector: 'page-add-member',
@@ -56,7 +55,8 @@ import {Member} from "../app/models/member";
         </div>
         <ion-item style="margin-top:8px;">
           <ion-label>Notify Member of Visitor</ion-label>
-          <ion-toggle [(ngModel)]='default' [ngModelOptions]="{standalone: true}" (ionChange)="notificationChanged($event)"></ion-toggle>
+          <ion-toggle [(ngModel)]='default' [ngModelOptions]="{standalone: true}"
+                      (ionChange)="notificationChanged($event)"></ion-toggle>
         </ion-item>
         <div style="height:10px"></div>
         <ion-grid>
@@ -87,23 +87,25 @@ export class SignupMemberPage {
   member;
   text: string;
   default: boolean;
+
   constructor(public navCtrl: NavController, private toast: ToastService,
-              private repository: Repository , private navParams:NavParams) {
+              private repository: Repository, private navParams: NavParams,
+              private loadingCtrl: LoadingController) {
     this.member = this.navParams.get('member');
-    if(this.member){
+    if (this.member) {
       this.text = 'Update Member';
       this.default = this.member.is_notification_member;
     }
-    else{
+    else {
       this.text = 'Add Member';
       this.default = false;
     }
-    this.name = new FormControl(this.member? this.member.name : null, [Validators.required, Validators.minLength(3)]);
-    this.email = new FormControl(this.member? this.member.email : null, [Validators.required, , Validators.email]);
-    this.mobile = new FormControl(this.member? this.member.phone : null, [Validators.required,
+    this.name = new FormControl(this.member ? this.member.name : null, [Validators.required, Validators.minLength(3)]);
+    this.email = new FormControl(this.member ? this.member.email : null, [Validators.required, , Validators.email]);
+    this.mobile = new FormControl(this.member ? this.member.phone : null, [Validators.required,
       Validators.minLength(10), Validators.maxLength(10)]);
-    this.gender = new FormControl(this.member? this.member.gender :'M', [Validators.required]);
-    this.notificationMember = new FormControl(this.member? this.member.is_notification_member :'False', [Validators.required]);
+    this.gender = new FormControl(this.member ? this.member.gender : 'M', [Validators.required]);
+    this.notificationMember = new FormControl(this.member ? this.member.is_notification_member : 'False', [Validators.required]);
 
     this.signupForm = new FormGroup({
       name: this.name,
@@ -128,22 +130,34 @@ export class SignupMemberPage {
   }
 
   addMember() {
-    if(this.member){
-      this.repository.updateMember(this.member.id , this.signupForm.value).subscribe(res =>{
-        this.navCtrl.pop();
-        this.toast.success('Member Updated Successfully');
-      },
+    if (this.member) {
+      const loader = this.loadingCtrl.create({
+        content: 'Updating Member...'
+      });
+      loader.present();
+      this.repository.updateMember(this.member.id, this.signupForm.value).subscribe(res => {
+          loader.dismiss();
+          this.navCtrl.pop();
+          this.toast.success('Member Updated Successfully');
+        },
         err => {
-        this.toast.error(err.message);
+          loader.dismiss();
+          this.toast.error(err.error.error);
         })
     }
-    else{
+    else {
+      const loader = this.loadingCtrl.create({
+        content: 'Adding Member...'
+      });
+      loader.present();
       this.repository.addMember(this.signupForm.value).subscribe(res => {
+          loader.dismiss();
           this.navCtrl.pop();
           this.toast.success('Member Added Successfully');
         },
         err => {
-          this.toast.error(err.message);
+          loader.dismiss();
+          this.toast.error(err.error.error);
         })
     }
   }

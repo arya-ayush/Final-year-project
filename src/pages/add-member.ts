@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AlertController, NavController} from "ionic-angular";
+import {AlertController, LoadingController, NavController} from "ionic-angular";
 import {SignupMemberPage} from "./signup-member";
 import {Member} from "../app/models/member";
 import {Repository} from "../app/repository/repository";
@@ -56,7 +56,8 @@ export class AddMemberPage implements OnInit {
   length: number = 0;
 
   constructor(public navCtrl: NavController, public repository: Repository,
-              private alertCtrl: AlertController, private toast: ToastService) {
+              private alertCtrl: AlertController, private toast: ToastService,
+              private loadingCtrl: LoadingController) {
   }
 
   addMember() {
@@ -64,12 +65,17 @@ export class AddMemberPage implements OnInit {
   }
 
   ngOnInit() {
+    const loader = this.loadingCtrl.create({
+      content: 'Fetching Member List...'
+    });
+    loader.present();
     this.loading = true;
     const members$ = this.repository.getMembers();
     members$[0].subscribe(members => {
       this.members = members;
       this.length = this.members.length;
       this.loading = false;
+      loader.dismiss();
     });
   }
 
@@ -80,9 +86,16 @@ export class AddMemberPage implements OnInit {
         {
           text: 'Delete Member',
           handler: () => {
-            //console.log('Cancel clicked');
+            const loader = this.loadingCtrl.create({
+              content: 'Deleting Member...'
+            });
+            loader.present();
             this.repository.deleteMember(member.id).subscribe(() => {
+              loader.dismiss();
               this.toast.success('Member Deleted Successfully');
+            },err => {
+              loader.dismiss();
+              this.toast.error('Some Error Occured');
             });
           }
         },

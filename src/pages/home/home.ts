@@ -36,7 +36,7 @@ export class HomePage {
       androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
     }).then(
       (date) => {
-        this.navCtrl.push(VisitorLogPage,{'date':date});
+        this.navCtrl.push(VisitorLogPage,{'date':date , 'user': 'user'});
       },
       (err) => {
         this.toast.error('Error occurred while getting date');

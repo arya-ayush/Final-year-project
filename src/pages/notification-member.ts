@@ -3,7 +3,6 @@ import {ToastService} from "../app/services/toast-service";
 import {Repository} from "../app/repository/repository";
 import {LoadingController} from "ionic-angular";
 import {Member} from "../app/models/member";
-import {Visitor} from "../app/models/visitor";
 
 @Component({
   selector: 'page-notification-member',
@@ -45,27 +44,27 @@ import {Visitor} from "../app/models/visitor";
 
   `]
 })
-export class NotificationMemberPage implements OnInit{
-  loading : boolean = false;
+export class NotificationMemberPage implements OnInit {
+  loading: boolean = false;
   length: number = 0;
-  notificationMemnber : Member[];
+  notificationMemnber: Member[];
 
-  constructor(public repository: Repository, public loadingCtrl : LoadingController, private toast:ToastService) {
+  constructor(public repository: Repository, public loadingCtrl: LoadingController, private toast: ToastService) {
 
   }
 
-  ngOnInit(){
+  ngOnInit() {
     const loader = this.loadingCtrl.create({
       content: 'Getting Notification Member...'
     });
     loader.present();
     this.loading = true;
-    this.repository.getNotificationMember().subscribe( (res: Member[]) => {
+    this.repository.getNotificationMember().subscribe((res: Member[]) => {
       this.notificationMemnber = res;
       this.length = this.notificationMemnber.length;
       loader.dismiss();
       this.loading = false;
-    },error => {
+    }, error => {
       loader.dismiss();
       this.toast.error(error.error.error);
       this.loading = false;

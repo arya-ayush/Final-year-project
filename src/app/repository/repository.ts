@@ -53,6 +53,13 @@ export class Repository {
       });
   }
 
+  addVisitor(data): Observable<Visitor> {
+    return this.service.addVisitor(data)
+      .map((res: Visitor) => {
+        return res;
+      });
+  }
+
   deleteMember(id: number): Observable<Member> {
     return this.service.deleteMember(id).map((res: Member) => {
       this.store.dispatch(new MemberDeleteAction(id));
@@ -88,9 +95,22 @@ export class Repository {
     });
   }
 
+  getAllVisitor(date): Observable<Visitor[]>{
+    return this.service.getAllVisitor(date).map((res) => {
+      return <Visitor[]>res;
+    });
+  }
+
   getNotificationMember(): Observable<Member[]>{
     return this.service.getNotificationMember().map((res) => {
       return <Member[]>res;
     })
+  }
+
+  addOwner(data): Observable<Member> {
+    return this.service.addOwner(data)
+      .map((res: Member) => {
+        return res;
+      });
   }
 }
