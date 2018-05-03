@@ -9,6 +9,7 @@ import {LoginPage} from "../pages/login";
 import {AdminHomePage} from "../pages/Admin/home";
 import {BackButtonService} from "./services/back-button";
 import {Repository} from "./repository/repository";
+import {ScreenOrientation} from "@ionic-native/screen-orientation";
 
 @Component({
   templateUrl: 'app.html'
@@ -21,7 +22,8 @@ export class MyApp {
               public splashScreen: SplashScreen,
               public network: NetworkService,
               public repository: Repository,
-              public backButtonService: BackButtonService) {
+              public backButtonService: BackButtonService,
+              private screenOrientation: ScreenOrientation) {
     this.initializeApp();
     this.network.networkDetection();
     if (this.platform.is('android')) {
@@ -45,6 +47,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      //this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
     });
   }
 }

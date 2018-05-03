@@ -85,4 +85,5 @@
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
     <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
     <engine name="android" spec="7.0.0" />
+    <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
 </widget>

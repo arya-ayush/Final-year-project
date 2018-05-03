@@ -27,6 +27,7 @@ import {DatePipe} from "@angular/common";
 import {NotificationMemberPage} from "../pages/notification-member";
 import {AddFlatOwnerPage} from "../pages/Admin/add-flat-owner";
 import {AddVisitorPage} from "../pages/Admin/add-visitor";
+import {ScreenOrientation} from "@ionic-native/screen-orientation";
 
 @NgModule({
   declarations: [
@@ -73,6 +74,7 @@ import {AddVisitorPage} from "../pages/Admin/add-visitor";
     BackButtonService,
     BackgroundMode,
     DatePicker,
+    ScreenOrientation,
     [DatePipe],
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

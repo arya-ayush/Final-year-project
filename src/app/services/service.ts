@@ -7,7 +7,9 @@ import {Member} from "../models/member";
 import {Visitor} from "../models/visitor";
 
 const BASE_URL = 'http://vallabh-final.herokuapp.com/';
-
+const MSG_BASE_URL = 'http://control.msg91.com/api/';
+const SMS_BASE_URL = 'http://api.msg91.com/api/';
+const Auth_Key = '162965AXHuE54859533cfb';
 @Injectable()
 export class Service {
   constructor(private http: HttpClient) {
@@ -135,4 +137,45 @@ export class Service {
       return <Visitor>res;
     })
   }
+
+  sendOtp(mobileNumber): Observable<any>{
+    return this.http.post(MSG_BASE_URL+'sendotp.php',{},
+      {params:{
+          'authkey':Auth_Key,
+          'message':'Your OTP is ##OTP##',
+          'sender': 'Homantra',
+          'mobile':mobileNumber
+      }})
+      .map(res =>{
+        return res;
+      });
+  }
+
+  verifyOtp(otp,mobileNumber): Observable<any>{
+    return this.http.post(MSG_BASE_URL+'verifyRequestOTP.php',{},
+      {params:{
+          'authkey':Auth_Key,
+          'mobile':mobileNumber,
+          'otp':otp
+      }})
+      .map(res => {
+        return res;
+      });
+  }
+
+  sendSms(mobileNumber,message): Observable<any>{
+    return this.http.get(SMS_BASE_URL+'sendhttp.php',
+      {params:{
+          'sender':'Homant',
+          'route':'4',
+          'mobiles':mobileNumber,
+          'authkey':Auth_Key,
+          'country':'91',
+          'message':message
+      }})
+      .map(res =>{
+        return res;
+      });
+  }
+
 }

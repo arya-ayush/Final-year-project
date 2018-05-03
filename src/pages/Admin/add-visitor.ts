@@ -1,9 +1,8 @@
 import {Component} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {LoadingController, NavController} from "ionic-angular";
+import {AlertController, LoadingController, NavController} from "ionic-angular";
 import {ToastService} from "../../app/services/toast-service";
 import {Repository} from "../../app/repository/repository";
-import {Visitor} from "../../app/models/visitor";
 
 @Component({
   selector: 'page-add-visitor',
@@ -14,7 +13,7 @@ import {Visitor} from "../../app/models/visitor";
       </ion-navbar>
     </ion-header>
     <ion-content padding>
-      <form [formGroup]="signupForm" (submit)="signupForm.valid && addVisitor()">
+      <form [formGroup]="signupForm" (submit)="signupForm.valid && sendOtp()">
         <ion-item>
           <ion-label floating>Name</ion-label>
           <ion-input formControlName="name"></ion-input>
@@ -67,7 +66,7 @@ import {Visitor} from "../../app/models/visitor";
           <ion-row>
             <ion-col col-md-5 col-sm-4></ion-col>
             <ion-col>
-              <button  [disabled]="!signupForm.valid && signupForm.touched " ion-button type="submit" outline round>
+              <button [disabled]="!signupForm.valid && signupForm.touched " ion-button type="submit" outline round>
                 Add Visitor
               </button>
             </ion-col>
@@ -89,7 +88,12 @@ export class AddVisitorPage {
   block: FormControl;
   purpose: FormControl;
   flatNumber: FormControl;
-  constructor(public navCtrl: NavController, private toast: ToastService,
+  notify;
+  index;
+  mobileNumber: string = '';
+  message: string = '';
+
+  constructor(public navCtrl: NavController, private toast: ToastService, private alertCtrl: AlertController,
               private repository: Repository, private loadingCtrl: LoadingController) {
     this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
     this.mobile = new FormControl(null, [Validators.required,
@@ -97,7 +101,7 @@ export class AddVisitorPage {
     this.address = new FormControl(null, [Validators.required]);
     this.purpose = new FormControl(null, [Validators.required]);
     this.block = new FormControl(null);
-    this.flatNumber = new FormControl(null , [Validators.required]);
+    this.flatNumber = new FormControl(null, [Validators.required]);
 
     this.signupForm = new FormGroup({
       name: this.name,
@@ -109,16 +113,81 @@ export class AddVisitorPage {
     })
   }
 
+  sendOtp() {
+    this.repository.sendOtp(this.mobile.value).subscribe(res => {
+      this.toast.success('OTP send successfully');
+      this.presentPrompt();
+    }, err => {
+      this.toast.error('Couldnot Send OTP');
+    })
+  }
+
+  presentPrompt() {
+    let alert = this.alertCtrl.create({
+      title: 'Enter the OTP send to your mobile number',
+      inputs: [
+        {
+          name: 'otp',
+          placeholder: 'OTP',
+          type: 'number'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: data => {
+          }
+        },
+        {
+          text: 'Verify',
+          handler: data => {
+            this.repository.verifyOtp(data.otp, this.mobile.value).subscribe(res => {
+              if (res.type == 'success') {
+                this.addVisitor();
+              }
+              else {
+                this.toast.error('OTP doesnot match');
+              }
+
+            }, err => {
+              this.toast.error('OTP cannot be verified');
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
   addVisitor() {
     const loader = this.loadingCtrl.create({
       content: 'Registering Visitor...'
     });
     loader.present();
     this.repository.addVisitor(this.signupForm.value).subscribe(res => {
-        loader.dismiss();
-        this.navCtrl.pop();
-        this.toast.success('Visitor Added Successfully');
-        console.log(res);
+        this.notify = res.notify;
+        if (this.notify.length != 0) {
+          this.message = this.name.value + ' from ' + this.address.value + ' is visiting your flat';
+          for (this.index = 0; this.index < this.notify.length; this.index++) {
+            if (this.index == this.notify.length - 1) {
+              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
+            }
+            else {
+              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ',';
+            }
+          }
+          this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
+              this.navCtrl.pop();
+              loader.dismiss();
+              this.toast.success('Visitor Added Successfully and Sms Sent');
+            },
+            err => {
+              loader.dismiss();
+              console.log(err);
+              this.toast.error('Visitor added, Sms not sent');
+            })
+        }
       },
       err => {
         loader.dismiss();

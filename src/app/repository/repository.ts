@@ -113,4 +113,20 @@ export class Repository {
         return res;
       });
   }
+
+  sendOtp(mobileNumber): Observable<any> {
+    return this.service.sendOtp(mobileNumber).map(res => {
+      return res;
+    });
+  }
+  verifyOtp(otp,mobileNumber): Observable<any> {
+    return this.service.verifyOtp(otp,mobileNumber).map( res => {
+      return res;
+    });
+  }
+  sendSms(mobileNumber,message): Observable<any> {
+    return this.service.sendSms(mobileNumber,message).map(res =>{
+      return res;
+    });
+  }
 }

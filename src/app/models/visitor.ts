@@ -1,3 +1,5 @@
+import {Notification} from "./notification";
+
 export interface Visitor {
   name: string;
   phone: string;
@@ -7,9 +9,5 @@ export interface Visitor {
   society_name : string;
   block : string;
   flat_num : number;
-}
-
-export interface Notification {
-  phone: string;
-  email: string;
+  notify: Notification[];
 }
