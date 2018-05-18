@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>vallabh</name>
-    <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+<widget id="com.homantra.app" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Homantra Societies</name>
+    <description>Welcome to Homantra Societies app.</description>
+    <author email="keval.m199@gmail.com" href="http://bdcoe.co.in/">Keval Modhwadia</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -84,6 +84,6 @@
     <plugin name="cordova-plugin-network-information" spec="^2.0.1" />
     <plugin name="cordova-plugin-background-mode" spec="^0.7.2" />
     <plugin name="cordova-plugin-datepicker" spec="^0.9.3" />
-    <engine name="android" spec="7.0.0" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
+    <engine name="android" spec="7.0.0" />
 </widget>

@@ -6,6 +6,8 @@ import {DatePicker} from "@ionic-native/date-picker";
 import {ToastService} from "../../app/services/toast-service";
 import {AddFlatOwnerPage} from "./add-flat-owner";
 import {AddVisitorPage} from "./add-visitor";
+import {LoginPage} from "../login";
+import {Repository} from "../../app/repository/repository";
 
 @Component({
   selector: 'page-admin-home',
@@ -13,6 +15,11 @@ import {AddVisitorPage} from "./add-visitor";
 
     <ion-header>
       <ion-navbar>
+        <ion-buttons right>
+          <button ion-button icon-only (click)="logout()">
+            <ion-icon name="ios-power-outline"></ion-icon>
+          </button>
+        </ion-buttons>
         <ion-title>
           Admin Dashboard
         </ion-title>
@@ -21,7 +28,7 @@ import {AddVisitorPage} from "./add-visitor";
 
     <ion-content class="vertical-align-content" text-center>
       <ion-grid style="padding: 0;margin: 0;">
-        <ion-row style="height:47.5vh;display: table;">
+        <ion-row style="height:47vh;display: table;">
           <ion-col col-6 style="background-color: #ECF6EE;display: table-cell;vertical-align: middle;"
                    (click)="addVisitor()">
             <ion-icon style="zoom:5;color:#42A450" name="ios-contacts-outline"></ion-icon>
@@ -32,7 +39,7 @@ import {AddVisitorPage} from "./add-visitor";
             <h3>Today's Log</h3>
           </ion-col>
         </ion-row>
-        <ion-row style="height:47.5vh;display: table;">
+        <ion-row style="height:47vh;display: table;">
           <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="visitorLog()">
             <ion-icon style="zoom:5;color:#42A450" name="ios-archive-outline"></ion-icon>
             <h3>Visitor Log</h3>
@@ -54,7 +61,8 @@ import {AddVisitorPage} from "./add-visitor";
 export class AdminHomePage {
 
   constructor(public navCtrl: NavController, public service: Service,
-              private datePicker: DatePicker, private toast: ToastService) {
+              private datePicker: DatePicker, private toast: ToastService,
+              private repository: Repository) {
 
   }
 
@@ -86,5 +94,10 @@ export class AdminHomePage {
 
   addVisitor() {
     this.navCtrl.push(AddVisitorPage);
+  }
+
+  logout() {
+    this.repository.logout();
+    this.navCtrl.setRoot(LoginPage)
   }
 }
