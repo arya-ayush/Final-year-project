@@ -39,8 +39,8 @@ import {ToastService} from "../app/services/toast-service";
                 <h2 *ngIf="user == 'admin'">Visited In:</h2>
                 <ion-item *ngIf="user == 'admin'">
                   <ion-icon item-start name="ios-home-outline"></ion-icon>
-                  <h3>Block : {{visitor.block}}</h3>
-                  <h3>Flat : {{visitor.flat_num}}</h3>
+                  <h3>Block : {{visitor.society.block}}</h3>
+                  <h3>Flat : {{visitor.society.flat_num}}</h3>
                 </ion-item>
               </ion-card-content>
             </ion-card>

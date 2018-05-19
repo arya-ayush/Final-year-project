@@ -6,8 +6,12 @@ export interface Visitor {
   address: string;
   purpose: string;
   image: string;
+  society: Society;
+  notify: Notification[];
+}
+
+export interface Society {
   society_name : string;
   block : string;
   flat_num : number;
-  notify: Notification[];
 }
