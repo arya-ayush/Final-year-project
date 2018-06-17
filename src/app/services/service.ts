@@ -138,6 +138,15 @@ export class Service {
     })
   }
 
+  getBlockList(): Observable<string[]>{
+    const society = JSON.parse(localStorage.getItem('admin')).society_name;
+    return this.http.get(BASE_URL+`list_block?society_name=${society}`,{headers: this.getAdminHeaders()}).map(
+      (res) => {
+        return <string[]>res;
+      }
+    )
+  }
+
   sendOtp(mobileNumber): Observable<any>{
     return this.http.post(MSG_BASE_URL+'sendotp.php',{},
       {params:{

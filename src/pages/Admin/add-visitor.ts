@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AlertController, LoadingController, NavController} from "ionic-angular";
 import {ToastService} from "../../app/services/toast-service";
@@ -12,7 +12,7 @@ import {Repository} from "../../app/repository/repository";
         <ion-title>Add Visitor</ion-title>
       </ion-navbar>
     </ion-header>
-    <ion-content padding>
+    <ion-content *ngIf="loading == false" padding>
       <form [formGroup]="signupForm" (submit)="signupForm.valid && sendOtp()">
         <ion-item>
           <ion-label floating>Name</ion-label>
@@ -41,9 +41,17 @@ import {Repository} from "../../app/repository/repository";
           <p style="color:red;">Address is Required</p>
         </ion-item>
         <h4 style="text-align:center;">Visiting To:</h4>
+        <!--<ion-item>-->
+          <!--<ion-label floating>Block</ion-label>-->
+          <!--<ion-input formControlName="block" type="text"></ion-input>-->
+        <!--</ion-item>-->
         <ion-item>
-          <ion-label floating>Block</ion-label>
-          <ion-input formControlName="block" type="text"></ion-input>
+          <ion-label>Block</ion-label>
+          <ion-select formControlName="block">
+            <ion-option value="f">Female</ion-option>
+            <ion-option value="m">Male</ion-option>
+            <ion-option *ngFor="let block of blocks" [value]="block">{{block}}</ion-option>
+          </ion-select>
         </ion-item>
         <ion-item>
           <ion-label floating>Flat Number</ion-label>
@@ -80,7 +88,9 @@ import {Repository} from "../../app/repository/repository";
 
   `]
 })
-export class AddVisitorPage {
+export class AddVisitorPage implements OnInit {
+  loading : boolean = true;
+  blocks : string[] = [];
   signupForm: FormGroup;
   name: FormControl;
   mobile: FormControl;
@@ -111,6 +121,26 @@ export class AddVisitorPage {
       block: this.block,
       flatNumber: this.flatNumber,
     })
+  }
+
+  ngOnInit() {
+    this.loading = true;
+    const loader = this.loadingCtrl.create({
+      content: 'Fetching Block List...Please Wait'
+    });
+    loader.present();
+    this.repository.getBlockList().subscribe((res: string[]) => {
+      this.blocks = res.blocks;
+      console.log('Block list is');
+      console.log(this.blocks);
+      loader.dismiss();
+      this.loading = false;
+    }, error => {
+      loader.dismiss();
+      this.toast.error(error.error.error);
+      this.loading = false;
+    })
+
   }
 
   sendOtp() {
@@ -165,10 +195,11 @@ export class AddVisitorPage {
       content: 'Registering Visitor...'
     });
     loader.present();
+    console.log(this.signupForm.value);
     this.repository.addVisitor(this.signupForm.value).subscribe(res => {
         this.notify = res.notify;
         if (this.notify.length != 0) {
-          this.message = this.name.value + ' from ' + this.address.value + ' is visiting your flat';
+          this.message = this.name.value + ' from ' + this.address.value + ' is visiting your flat for ' + this.purpose.value;
           for (this.index = 0; this.index < this.notify.length; this.index++) {
             if (this.index == this.notify.length - 1) {
               this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;

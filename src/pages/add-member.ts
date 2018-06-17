@@ -15,8 +15,8 @@ import {ToastService} from "../app/services/toast-service";
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row>
-          <ion-col *ngIf="length>0 && !loading" col-sm-12 col-md-4 md-offset-4>
+        <ion-row>Y
+          <ion-col *ngIf="length>0 && !loading" col-sm-12>
             <ion-card *ngFor="let member of members" (click)="presentAlert(member)">
               <ion-card-content>
                 <ion-item>
@@ -34,7 +34,7 @@ import {ToastService} from "../app/services/toast-service";
               </ion-card-content>
             </ion-card>
           </ion-col>
-          <ion-col style="margin-top:38vh;" *ngIf="length==0 && !loading" col-sm-12 col-md-4 md-offset-4>
+          <ion-col style="margin-top:38vh;" *ngIf="length==0 && !loading" col-sm-12>
             <p>You have not added any member yet</p>
           </ion-col>
         </ion-row>

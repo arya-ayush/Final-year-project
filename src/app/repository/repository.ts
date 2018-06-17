@@ -107,6 +107,12 @@ export class Repository {
     })
   }
 
+  getBlockList(): Observable<string[]>{
+    return this.service.getBlockList().map((res) => {
+      return <string[]>res;
+    })
+  }
+
   addOwner(data): Observable<Member> {
     return this.service.addOwner(data)
       .map((res: Member) => {

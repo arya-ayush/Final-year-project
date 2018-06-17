@@ -18,7 +18,7 @@ import {Member} from "../app/models/member";
           <ion-col style="margin-top: 38vh;" *ngIf="length == 0 && !loading">
             You have not added any notification member yet
           </ion-col>
-          <ion-col *ngIf="length>0 && !loading" col-sm-12 col-md-4 md-offset-4>
+          <ion-col *ngIf="length>0 && !loading" col-sm-12>
             <ion-card *ngFor="let member of notificationMemnber">
               <ion-card-content>
                 <ion-item>
