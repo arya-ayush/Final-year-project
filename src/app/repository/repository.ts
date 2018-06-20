@@ -13,7 +13,7 @@ import {getMembers, membersLoaded, membersLoading} from "../reducers/member";
 import 'rxjs/add/operator/combineLatest';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/filter';
-import {Visitor} from "../models/visitor";
+import { Block, Visitor } from "../models/visitor";
 
 
 @Injectable()
@@ -107,9 +107,9 @@ export class Repository {
     })
   }
 
-  getBlockList(): Observable<string[]>{
+  getBlockList(): Observable<Block>{
     return this.service.getBlockList().map((res) => {
-      return <string[]>res;
+      return <Block>res;
     })
   }
 

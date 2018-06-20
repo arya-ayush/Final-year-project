@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import {User} from "../models/user";
 import {Observable} from "rxjs/Observable";
 import {Member} from "../models/member";
-import {Visitor} from "../models/visitor";
+import { Block, Visitor } from "../models/visitor";
 
 const BASE_URL = 'http://vallabh-final.herokuapp.com/';
 const MSG_BASE_URL = 'http://control.msg91.com/api/';
@@ -23,6 +23,11 @@ export class Service {
   private getAdminHeaders(): { [header: string]: string | string[] } {
     const token = JSON.parse(localStorage.getItem('admin')).token;
     return token ? {'Authorization': 'Token ' + token, 'Content-Type': 'application/json'} : {};
+  }
+
+  private getAdminHeader(): { [header: string]: string | string[] } {
+    const token = JSON.parse(localStorage.getItem('admin')).token;
+    return token ? {'Authorization': 'Token ' + token} : {};
   }
 
   hasLoginTokenUser(): boolean {
@@ -129,20 +134,17 @@ export class Service {
 
   addVisitor(data): Observable<Visitor> {
     return this.http.post(BASE_URL + 'society/visitors',
-      {
-        "name": data.name, "address": data.address, "phone": data.mobile,
-        "block": data.block, "purpose": data.purpose,"flat_num":data.flatNumber
-      },
-      {headers: this.getAdminHeaders(), params: {}}).map(res => {
+      data,
+      {headers: this.getAdminHeader()}).map(res => {
       return <Visitor>res;
     })
   }
 
-  getBlockList(): Observable<string[]>{
+  getBlockList(): Observable<Block>{
     const society = JSON.parse(localStorage.getItem('admin')).society_name;
     return this.http.get(BASE_URL+`list_block?society_name=${society}`,{headers: this.getAdminHeaders()}).map(
       (res) => {
-        return <string[]>res;
+        return <Block>res;
       }
     )
   }

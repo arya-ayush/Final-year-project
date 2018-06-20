@@ -15,3 +15,7 @@ export interface Society {
   block : string;
   flat_num : number;
 }
+
+export interface Block {
+  blocks: string[]
+}

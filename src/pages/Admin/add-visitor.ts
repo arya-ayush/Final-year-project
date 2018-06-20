@@ -3,6 +3,9 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {AlertController, LoadingController, NavController} from "ionic-angular";
 import {ToastService} from "../../app/services/toast-service";
 import {Repository} from "../../app/repository/repository";
+import { Block } from '../../app/models/visitor';
+import { Camera, CameraOptions } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
 
 @Component({
   selector: 'page-add-visitor',
@@ -12,8 +15,15 @@ import {Repository} from "../../app/repository/repository";
         <ion-title>Add Visitor</ion-title>
       </ion-navbar>
     </ion-header>
-    <ion-content *ngIf="loading == false" padding>
-      <form [formGroup]="signupForm" (submit)="signupForm.valid && sendOtp()">
+    <ion-content *ngIf="loading == false" padding style="margin-top:5vh;">
+      <ion-item>
+        <button ion-button color="secondary" (click)="getImage()">Get Image</button>
+      </ion-item>
+      <ion-item *ngIf="isImageCaptured">
+        <h4>Image Preview</h4>
+        <img src="{{pathForImage(imageName)}}"  alt="Ionic File" width="300" />
+      </ion-item>
+      <form [formGroup]="signupForm" (submit)="signupForm.valid && addVisitor()">
         <ion-item>
           <ion-label floating>Name</ion-label>
           <ion-input formControlName="name"></ion-input>
@@ -48,8 +58,6 @@ import {Repository} from "../../app/repository/repository";
         <ion-item>
           <ion-label>Block</ion-label>
           <ion-select formControlName="block">
-            <ion-option value="f">Female</ion-option>
-            <ion-option value="m">Male</ion-option>
             <ion-option *ngFor="let block of blocks" [value]="block">{{block}}</ion-option>
           </ion-select>
         </ion-item>
@@ -74,13 +82,14 @@ import {Repository} from "../../app/repository/repository";
           <ion-row>
             <ion-col col-md-5 col-sm-4></ion-col>
             <ion-col>
-              <button [disabled]="!signupForm.valid && signupForm.touched " ion-button type="submit" outline round>
+              <button [disabled]="!signupForm.valid  || !isImageCaptured" ion-button type="submit" outline round>
                 Add Visitor
               </button>
             </ion-col>
             <ion-col col-md-5 col-sm-4></ion-col>
           </ion-row>
         </ion-grid>
+        <div style="height:10px"></div>
       </form>
     </ion-content>
   `,
@@ -89,6 +98,9 @@ import {Repository} from "../../app/repository/repository";
   `]
 })
 export class AddVisitorPage implements OnInit {
+  fileObject;
+  imageName:any;
+  isImageCaptured: boolean = false;
   loading : boolean = true;
   blocks : string[] = [];
   signupForm: FormGroup;
@@ -104,7 +116,8 @@ export class AddVisitorPage implements OnInit {
   message: string = '';
 
   constructor(public navCtrl: NavController, private toast: ToastService, private alertCtrl: AlertController,
-              private repository: Repository, private loadingCtrl: LoadingController) {
+              private repository: Repository, private loadingCtrl: LoadingController, private camera: Camera,
+              private file:File) {
     this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
     this.mobile = new FormControl(null, [Validators.required,
       Validators.minLength(10), Validators.maxLength(10)]);
@@ -129,10 +142,8 @@ export class AddVisitorPage implements OnInit {
       content: 'Fetching Block List...Please Wait'
     });
     loader.present();
-    this.repository.getBlockList().subscribe((res: string[]) => {
+    this.repository.getBlockList().subscribe((res: Block) => {
       this.blocks = res.blocks;
-      console.log('Block list is');
-      console.log(this.blocks);
       loader.dismiss();
       this.loading = false;
     }, error => {
@@ -195,34 +206,100 @@ export class AddVisitorPage implements OnInit {
       content: 'Registering Visitor...'
     });
     loader.present();
-    console.log(this.signupForm.value);
-    this.repository.addVisitor(this.signupForm.value).subscribe(res => {
+
+    let targetPath = this.pathForImage(this.imageName);
+    this.getFileObj(targetPath,'image/*').then(file =>{
+      this.fileObject = file;
+      let formData = new FormData();
+      formData.append('name', this.signupForm.get('name').value);
+      formData.append('phone',this.signupForm.get('mobile').value)
+      formData.append('address',this.signupForm.get('address').value);
+      formData.append('block',this.signupForm.get('block').value);
+      formData.append('purpose',this.signupForm.get('purpose').value);
+      formData.append('flat_num',this.signupForm.get('flatNumber').value);
+      formData.append('image',this.fileObject,this.imageName);
+      this.repository.addVisitor(formData).subscribe(res => {
         this.notify = res.notify;
-        if (this.notify.length != 0) {
-          this.message = this.name.value + ' from ' + this.address.value + ' is visiting your flat for ' + this.purpose.value;
-          for (this.index = 0; this.index < this.notify.length; this.index++) {
-            if (this.index == this.notify.length - 1) {
-              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
+          if (this.notify.length != 0) {
+            this.message = this.name.value + ' from ' + this.address.value + ' is visiting your flat for ' + this.purpose.value;
+            for (this.index = 0; this.index < this.notify.length; this.index++) {
+              if (this.index == this.notify.length - 1) {
+                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
+              }
+              else {
+                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ',';
+              }
             }
-            else {
-              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ',';
-            }
+            this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
+                this.navCtrl.pop();
+                loader.dismiss();
+                this.toast.success('Visitor Added Successfully and Sms Sent');
+              },
+              err => {
+                loader.dismiss();
+                this.toast.error('Visitor added, Sms not sent');
+              })
           }
-          this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
-              this.navCtrl.pop();
-              loader.dismiss();
-              this.toast.success('Visitor Added Successfully and Sms Sent');
-            },
-            err => {
-              loader.dismiss();
-              console.log(err);
-              this.toast.error('Visitor added, Sms not sent');
-            })
-        }
-      },
-      err => {
-        loader.dismiss();
-        this.toast.error(err.error.error);
+        },
+        err => {
+          loader.dismiss();
+          this.toast.error(err.error.error);
+        })
+    });
+  }
+
+  getImage() {
+    const options: CameraOptions = {
+      quality: 50,
+      correctOrientation: true,
+      saveToPhotoAlbum: false
+    }
+
+    this.camera.getPicture(options).then((imagePath) => {
+      let currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
+      let correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
+      this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
+      this.isImageCaptured = true;
+    }, (err) => {
+      this.toast.error('Error occured while selecting image');
+    });
+  }
+
+  private createFileName() {
+    let d = new Date() , n = d.getTime(), newFileName =  n + ".jpg";
+    return newFileName;
+  }
+
+  private copyFileToLocalDir(namePath, currentName, newFileName) {
+    this.file.copyFile(namePath, currentName,this.file.dataDirectory, newFileName).then(success => {
+      this.imageName = newFileName;
+    }, error => {
+      this.toast.error('Error occured while storing file.');
+    });
+  }
+
+  public pathForImage(img) {
+    if (img === null) {
+      return '';
+    } else {
+      return this.file.dataDirectory + img;
+    }
+  }
+
+  getFileObj(path, type) {
+    return new Promise(function (onFulfill, onReject) {
+      (<any>window).resolveLocalFileSystemURL(path, (res) => {
+        res.file((resFile) => {
+          let reader = new FileReader();
+          reader.onload = (evt: any) => {
+            onFulfill(new Blob([evt.target.result], {type: type}));
+          };
+          reader.readAsArrayBuffer(resFile);
+        });
+      }, err => {
+        this.toast.error("File could not be loaded");
+        onReject('File could not be loaded.');
       })
+    });
   }
 }

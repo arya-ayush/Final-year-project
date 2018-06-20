@@ -28,6 +28,8 @@ import {NotificationMemberPage} from "../pages/notification-member";
 import {AddFlatOwnerPage} from "../pages/Admin/add-flat-owner";
 import {AddVisitorPage} from "../pages/Admin/add-visitor";
 import {ScreenOrientation} from "@ionic-native/screen-orientation";
+import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
 
 @NgModule({
   declarations: [
@@ -75,6 +77,8 @@ import {ScreenOrientation} from "@ionic-native/screen-orientation";
     BackgroundMode,
     DatePicker,
     ScreenOrientation,
+    Camera,
+    File,
     [DatePipe],
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
