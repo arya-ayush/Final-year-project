@@ -23,7 +23,7 @@ import { File } from '@ionic-native/file';
         <h4>Image Preview</h4>
         <img src="{{pathForImage(imageName)}}"  alt="Ionic File" width="300" />
       </ion-item>
-      <form [formGroup]="signupForm" (submit)="signupForm.valid && addVisitor()">
+      <form [formGroup]="signupForm" (submit)="signupForm.valid && sendOtp()">
         <ion-item>
           <ion-label floating>Name</ion-label>
           <ion-input formControlName="name"></ion-input>
@@ -41,14 +41,6 @@ import { File } from '@ionic-native/file';
            signupForm.get('mobile').touched" style="margin-bottom:0px;">
           <p style="color:red;" *ngIf="signupForm.get('mobile').hasError('required');">Mobile Number is Required</p>
           <p style="color:red;" *ngIf="!signupForm.get('mobile').hasError('required');">Length should be 10</p>
-        </ion-item>
-        <ion-item>
-          <ion-label floating>Address</ion-label>
-          <ion-input formControlName="address" type="text"></ion-input>
-        </ion-item>
-        <ion-item no-lines *ngIf="signupForm.get('address').invalid &&
-           signupForm.get('address').touched" style="margin-bottom:0px;">
-          <p style="color:red;">Address is Required</p>
         </ion-item>
         <h4 style="text-align:center;">Visiting To:</h4>
         <!--<ion-item>-->
@@ -121,7 +113,7 @@ export class AddVisitorPage implements OnInit {
     this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
     this.mobile = new FormControl(null, [Validators.required,
       Validators.minLength(10), Validators.maxLength(10)]);
-    this.address = new FormControl(null, [Validators.required]);
+    this.address = new FormControl('delhi', [Validators.required]);
     this.purpose = new FormControl(null, [Validators.required]);
     this.block = new FormControl(null);
     this.flatNumber = new FormControl(null, [Validators.required]);
@@ -221,7 +213,7 @@ export class AddVisitorPage implements OnInit {
       this.repository.addVisitor(formData).subscribe(res => {
         this.notify = res.notify;
           if (this.notify.length != 0) {
-            this.message = this.name.value + ' from ' + this.address.value + ' is visiting your flat for ' + this.purpose.value;
+            this.message = this.name.value + ' is visiting your flat for ' + this.purpose.value;
             for (this.index = 0; this.index < this.notify.length; this.index++) {
               if (this.index == this.notify.length - 1) {
                 this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;

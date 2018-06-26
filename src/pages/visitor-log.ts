@@ -20,28 +20,33 @@ import {ToastService} from "../app/services/toast-service";
           <ion-col *ngIf="length>0 && !loading" col-sm-12>
             <ion-card  *ngFor="let visitor of visitorLog">
               <ion-card-content>
-                <ion-item>
-                  <ion-icon item-start name="ios-contact-outline"></ion-icon>
-                  <h3>{{visitor.name}}</h3>
-                </ion-item>
-                <ion-item>
-                  <ion-icon item-start name="ios-call-outline"></ion-icon>
-                  <h3>{{visitor.phone}}</h3>
-                </ion-item>
-                <ion-item>
-                  <ion-icon item-start name="ios-home-outline"></ion-icon>
-                  <h3>{{visitor.address}}</h3>
-                </ion-item>
-                <ion-item>
-                  <ion-icon item-start name="ios-help-outline"></ion-icon>
-                  <h3>{{visitor.purpose}}</h3>
-                </ion-item>
-                <h2 *ngIf="user == 'admin'">Visited In:</h2>
-                <ion-item *ngIf="user == 'admin'">
-                  <ion-icon item-start name="ios-home-outline"></ion-icon>
-                  <h3>Block : {{visitor.society.block}}</h3>
-                  <h3>Flat : {{visitor.society.flat_num}}</h3>
-                </ion-item>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col col-8>
+                      <ion-item>
+                        <ion-icon item-start name="ios-contact-outline"></ion-icon>
+                        <h3>{{visitor.name}}</h3>
+                      </ion-item>
+                      <ion-item>
+                        <ion-icon item-start name="ios-call-outline"></ion-icon>
+                        <h3>{{visitor.phone}}</h3>
+                      </ion-item>
+                      <ion-item>
+                        <ion-icon item-start name="ios-help-outline"></ion-icon>
+                        <h3>{{visitor.purpose}}</h3>
+                      </ion-item>
+                      <h2 *ngIf="user == 'admin'">Visited In:</h2>
+                      <ion-item *ngIf="user == 'admin'">
+                        <ion-icon item-start name="ios-home-outline"></ion-icon>
+                        <h3>Block : {{visitor.society.block}}</h3>
+                        <h3>Flat : {{visitor.society.flat_num}}</h3>
+                      </ion-item>
+                    </ion-col>
+                    <ion-col col-4 *ngIf="visitor.image != null">
+                      <img src="{{linkForImage(visitor.image)}}"  alt="Ionic File" width="300" />
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
               </ion-card-content>
             </ion-card>
           </ion-col>
@@ -108,4 +113,8 @@ export class VisitorLogPage implements OnInit {
 
   }
 
+  linkForImage(image){
+    const link: string = 'http://vallabh-final.herokuapp.com' + image;
+    return link;
+  }
 }
