@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {AlertController, LoadingController, NavController} from "ionic-angular";
-import {ToastService} from "../../app/services/toast-service";
-import {Repository} from "../../app/repository/repository";
-import { Block } from '../../app/models/visitor';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { AlertController, LoadingController, NavController } from "ionic-angular";
+import { ToastService } from "../../app/services/toast-service";
+import { Repository } from "../../app/repository/repository";
+import { Block, Visitor } from '../../app/models/visitor';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 
@@ -21,7 +21,7 @@ import { File } from '@ionic-native/file';
       </ion-item>
       <ion-item *ngIf="isImageCaptured">
         <h4>Image Preview</h4>
-        <img src="{{pathForImage(imageName)}}"  alt="Ionic File" width="300" />
+        <img src="{{pathForImage(imageName)}}" alt="Ionic File" width="300"/>
       </ion-item>
       <form [formGroup]="signupForm" (submit)="signupForm.valid && sendOtp()">
         <ion-item>
@@ -43,10 +43,6 @@ import { File } from '@ionic-native/file';
           <p style="color:red;" *ngIf="!signupForm.get('mobile').hasError('required');">Length should be 10</p>
         </ion-item>
         <h4 style="text-align:center;">Visiting To:</h4>
-        <!--<ion-item>-->
-          <!--<ion-label floating>Block</ion-label>-->
-          <!--<ion-input formControlName="block" type="text"></ion-input>-->
-        <!--</ion-item>-->
         <ion-item>
           <ion-label>Block</ion-label>
           <ion-select formControlName="block">
@@ -69,12 +65,16 @@ import { File } from '@ionic-native/file';
            signupForm.get('purpose').touched" style="margin-bottom:0px;">
           <p style="color:red;">Purpose is Required</p>
         </ion-item>
+        <ion-item style="margin-top: 5vh">
+          <ion-label style="color: #9f9f9f ">Frequent Visitor</ion-label>
+          <ion-toggle checked="false"></ion-toggle>
+        </ion-item>
         <div style="height:10px"></div>
         <ion-grid>
           <ion-row>
             <ion-col col-md-5 col-sm-4></ion-col>
             <ion-col>
-              <button [disabled]="!signupForm.valid  || !isImageCaptured" ion-button type="submit" outline round>
+              <button [disabled]="!signupForm.valid " ion-button type="submit" outline round>
                 Add Visitor
               </button>
             </ion-col>
@@ -91,10 +91,10 @@ import { File } from '@ionic-native/file';
 })
 export class AddVisitorPage implements OnInit {
   fileObject;
-  imageName:any;
+  imageName: any;
   isImageCaptured: boolean = false;
-  loading : boolean = true;
-  blocks : string[] = [];
+  loading: boolean = true;
+  blocks: string[] = [];
   signupForm: FormGroup;
   name: FormControl;
   mobile: FormControl;
@@ -106,10 +106,11 @@ export class AddVisitorPage implements OnInit {
   index;
   mobileNumber: string = '';
   message: string = '';
+  visitor: Visitor;
 
   constructor(public navCtrl: NavController, private toast: ToastService, private alertCtrl: AlertController,
               private repository: Repository, private loadingCtrl: LoadingController, private camera: Camera,
-              private file:File) {
+              private file: File) {
     this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
     this.mobile = new FormControl(null, [Validators.required,
       Validators.minLength(10), Validators.maxLength(10)]);
@@ -198,20 +199,20 @@ export class AddVisitorPage implements OnInit {
       content: 'Registering Visitor...'
     });
     loader.present();
-
     let targetPath = this.pathForImage(this.imageName);
-    this.getFileObj(targetPath,'image/*').then(file =>{
+    this.getFileObj(targetPath, 'image/*').then(file => {
       this.fileObject = file;
       let formData = new FormData();
       formData.append('name', this.signupForm.get('name').value);
-      formData.append('phone',this.signupForm.get('mobile').value)
-      formData.append('address',this.signupForm.get('address').value);
-      formData.append('block',this.signupForm.get('block').value);
-      formData.append('purpose',this.signupForm.get('purpose').value);
-      formData.append('flat_num',this.signupForm.get('flatNumber').value);
-      formData.append('image',this.fileObject,this.imageName);
+      formData.append('phone', this.signupForm.get('mobile').value)
+      formData.append('address', this.signupForm.get('address').value);
+      formData.append('block', this.signupForm.get('block').value);
+      formData.append('purpose', this.signupForm.get('purpose').value);
+      formData.append('flat_num', this.signupForm.get('flatNumber').value);
+      formData.append('image', this.fileObject, this.imageName);
       this.repository.addVisitor(formData).subscribe(res => {
-        this.notify = res.notify;
+          this.visitor = res;
+          this.notify = res.notify;
           if (this.notify.length != 0) {
             this.message = this.name.value + ' is visiting your flat for ' + this.purpose.value;
             for (this.index = 0; this.index < this.notify.length; this.index++) {
@@ -222,6 +223,8 @@ export class AddVisitorPage implements OnInit {
                 this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ',';
               }
             }
+            this.sendVisitorID();
+            this.showVisitorID();
             this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
                 this.navCtrl.pop();
                 loader.dismiss();
@@ -258,12 +261,12 @@ export class AddVisitorPage implements OnInit {
   }
 
   private createFileName() {
-    let d = new Date() , n = d.getTime(), newFileName =  n + ".jpg";
+    let d = new Date(), n = d.getTime(), newFileName = n + ".jpg";
     return newFileName;
   }
 
   private copyFileToLocalDir(namePath, currentName, newFileName) {
-    this.file.copyFile(namePath, currentName,this.file.dataDirectory, newFileName).then(success => {
+    this.file.copyFile(namePath, currentName, this.file.dataDirectory, newFileName).then(success => {
       this.imageName = newFileName;
     }, error => {
       this.toast.error('Error occured while storing file.');
@@ -284,7 +287,7 @@ export class AddVisitorPage implements OnInit {
         res.file((resFile) => {
           let reader = new FileReader();
           reader.onload = (evt: any) => {
-            onFulfill(new Blob([evt.target.result], {type: type}));
+            onFulfill(new Blob([evt.target.result], { type: type }));
           };
           reader.readAsArrayBuffer(resFile);
         });
@@ -294,4 +297,19 @@ export class AddVisitorPage implements OnInit {
       })
     });
   }
+
+  // TODO backend will send visitor ID
+  showVisitorID(){
+    const alert = this.alertCtrl.create({
+      title: this.visitor.name,
+      subTitle: 'Your unique id is 1. Keep this ID for future use.',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
+
+  sendVisitorID(){
+    this.repository.sendSms(this.visitor.phone, 'Your unique id is 1. Keep this ID for future use.');
+  }
+
 }

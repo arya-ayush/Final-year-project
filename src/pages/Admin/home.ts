@@ -8,6 +8,7 @@ import {AddFlatOwnerPage} from "./add-flat-owner";
 import {AddVisitorPage} from "./add-visitor";
 import {LoginPage} from "../login";
 import {Repository} from "../../app/repository/repository";
+import { FrequentVisitorPage } from "./frequent-visitor";
 
 @Component({
   selector: 'page-admin-home',
@@ -48,6 +49,16 @@ import {Repository} from "../../app/repository/repository";
                    (click)="addFlatOwner()">
             <ion-icon style="zoom:5;color:#42A450" name="ios-paper-outline"></ion-icon>
             <h3>Add Flat Owner</h3>
+          </ion-col>
+        </ion-row>
+        <ion-row style="height:47vh;display: table;">
+          <ion-col col-6 style="background-color:#ECF6EE;display: table-cell;vertical-align: middle;" (click)="frequentVisitor()">
+            <ion-icon style="zoom:5;color:#42A450" name="ios-people-outline"></ion-icon>
+            <h3>Frequent Visitor</h3>
+          </ion-col>
+          <ion-col col-6 style="display: table-cell;vertical-align: middle;">
+            <ion-icon style="zoom:5;color:#42A450" name="ios-share-outline"></ion-icon>
+            <h3>Share App</h3>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -99,5 +110,10 @@ export class AdminHomePage {
   logout() {
     this.repository.logout();
     this.navCtrl.setRoot(LoginPage)
+  }
+
+  frequentVisitor(){
+    this.navCtrl.push(FrequentVisitorPage);
+
   }
 }

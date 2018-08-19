@@ -27,7 +27,6 @@
     "@ionic-native/date-picker": "^4.7.0",
     "@ionic-native/file": "^4.7.0",
     "@ionic-native/network": "^4.6.0",
-    "@ionic-native/onesignal": "^4.7.0",
     "@ionic-native/screen-orientation": "^4.7.0",
     "@ionic-native/splash-screen": "4.6.0",
     "@ionic-native/status-bar": "4.6.0",
@@ -50,7 +49,7 @@
     "ion-datepicker": "^2.7.3",
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
-    "onesignal-cordova-plugin": "^2.4.1",
+    "onesignal-cordova-plugin": "^2.4.2",
     "rxjs": "5.5.8",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.20"

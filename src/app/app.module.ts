@@ -30,6 +30,7 @@ import {AddVisitorPage} from "../pages/Admin/add-visitor";
 import {ScreenOrientation} from "@ionic-native/screen-orientation";
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
+import { FrequentVisitorPage } from "../pages/Admin/frequent-visitor";
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { File } from '@ionic-native/file';
     VisitorLogPage,
     NotificationMemberPage,
     AddFlatOwnerPage,
-    AddVisitorPage
+    AddVisitorPage,
+    FrequentVisitorPage
   ],
   imports: [
     BrowserModule,
@@ -63,7 +65,8 @@ import { File } from '@ionic-native/file';
     VisitorLogPage,
     NotificationMemberPage,
     AddFlatOwnerPage,
-    AddVisitorPage
+    AddVisitorPage,
+    FrequentVisitorPage
   ],
   providers: [
     StatusBar,
