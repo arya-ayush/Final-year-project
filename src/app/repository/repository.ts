@@ -21,8 +21,14 @@ export class Repository {
   constructor(private service: Service, private store: Store<RootState>) {
   }
 
-  logout() {
-    this.service.logout();
+  logout(deviceId): Observable<any>{
+    return this.service.logout(deviceId).map( res => {
+      return res
+    });
+  }
+
+  adminLogout() {
+    this.service.adminLogout();
   }
 
   hasLoginTokenUser(): boolean {
@@ -134,5 +140,11 @@ export class Repository {
     return this.service.sendSms(mobileNumber,message).map(res =>{
       return res;
     });
+  }
+
+  addOneSignalId(deviceId): Observable<any> {
+    return this.service.addOneSignalId(deviceId).map(res => {
+      return res;
+    })
   }
 }

@@ -2,6 +2,8 @@ import {Component} from '@angular/core';
 import {LoginPage} from "./login";
 import {NavController} from "ionic-angular";
 import {Repository} from "../app/repository/repository";
+import {ToastService} from "../app/services/toast-service";
+import {OneSignal} from "@ionic-native/onesignal";
 
 @Component({
   selector: 'page-profile',
@@ -56,9 +58,11 @@ export class ProfilePage {
   iconName: string;
   userObj;
   gender;
-
+  userId : string;
   constructor(public repository: Repository,
-              public navCtrl: NavController) {
+              public navCtrl: NavController,
+              private toast: ToastService ,
+              private oneSignal: OneSignal) {
     this.userObj = JSON.parse(localStorage.getItem('user'));
     if (this.userObj.gender == 'M') {
       this.iconName = 'ios-male-outline';
@@ -70,9 +74,15 @@ export class ProfilePage {
     }
   }
 
-
   logout() {
-    this.repository.logout();
-    this.navCtrl.setRoot(LoginPage)
+    this.oneSignal.getIds().then( id => {
+      this.userId = id.userId;
+      this.repository.logout(this.userId).subscribe(res => {
+        this.navCtrl.setRoot(LoginPage)
+        this.toast.success("Successfully Logged Out");
+      }, error => {
+        this.toast.error("Some Error Occured");
+      })
+    })
   }
 }

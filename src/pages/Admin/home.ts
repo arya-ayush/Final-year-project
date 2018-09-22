@@ -1,14 +1,15 @@
-import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
-import {Service} from "../../app/services/service";
-import {VisitorLogPage} from "../visitor-log";
-import {DatePicker} from "@ionic-native/date-picker";
-import {ToastService} from "../../app/services/toast-service";
-import {AddFlatOwnerPage} from "./add-flat-owner";
-import {AddVisitorPage} from "./add-visitor";
-import {LoginPage} from "../login";
-import {Repository} from "../../app/repository/repository";
+import { Component } from '@angular/core';
+import { NavController } from 'ionic-angular';
+import { Service } from "../../app/services/service";
+import { VisitorLogPage } from "../visitor-log";
+import { DatePicker } from "@ionic-native/date-picker";
+import { ToastService } from "../../app/services/toast-service";
+import { AddFlatOwnerPage } from "./add-flat-owner";
+import { AddVisitorPage } from "./add-visitor";
+import { LoginPage } from "../login";
+import { Repository } from "../../app/repository/repository";
 import { FrequentVisitorPage } from "./frequent-visitor";
+import { SocialSharing } from "@ionic-native/social-sharing";
 
 @Component({
   selector: 'page-admin-home',
@@ -52,11 +53,12 @@ import { FrequentVisitorPage } from "./frequent-visitor";
           </ion-col>
         </ion-row>
         <ion-row style="height:47vh;display: table;">
-          <ion-col col-6 style="background-color:#ECF6EE;display: table-cell;vertical-align: middle;" (click)="frequentVisitor()">
+          <ion-col col-6 style="background-color:#ECF6EE;display: table-cell;vertical-align: middle;"
+                   (click)="frequentVisitor()">
             <ion-icon style="zoom:5;color:#42A450" name="ios-people-outline"></ion-icon>
             <h3>Frequent Visitor</h3>
           </ion-col>
-          <ion-col col-6 style="display: table-cell;vertical-align: middle;">
+          <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="share()">
             <ion-icon style="zoom:5;color:#42A450" name="ios-share-outline"></ion-icon>
             <h3>Share App</h3>
           </ion-col>
@@ -73,7 +75,7 @@ export class AdminHomePage {
 
   constructor(public navCtrl: NavController, public service: Service,
               private datePicker: DatePicker, private toast: ToastService,
-              private repository: Repository) {
+              private repository: Repository, private socialSharing: SocialSharing) {
 
   }
 
@@ -84,7 +86,7 @@ export class AdminHomePage {
       androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
     }).then(
       (date) => {
-        this.navCtrl.push(VisitorLogPage, {'date': date, 'user': 'admin'});
+        this.navCtrl.push(VisitorLogPage, { 'date': date, 'user': 'admin' });
       },
       (err) => {
         this.toast.error('Error occurred while getting date');
@@ -95,8 +97,7 @@ export class AdminHomePage {
   todayLog() {
     const date = new Date().toLocaleDateString();
     console.log(date);
-    // = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-    this.navCtrl.push(VisitorLogPage, {'date': date, 'user': 'admin'});
+    this.navCtrl.push(VisitorLogPage, { 'date': date, 'user': 'admin' });
   }
 
   addFlatOwner() {
@@ -108,12 +109,23 @@ export class AdminHomePage {
   }
 
   logout() {
-    this.repository.logout();
+    this.repository.adminLogout();
     this.navCtrl.setRoot(LoginPage)
   }
 
-  frequentVisitor(){
+  frequentVisitor() {
     this.navCtrl.push(FrequentVisitorPage);
 
   }
+
+  share() {
+    this.socialSharing.share("Download this awesome app",null,null,"https://play.google.com/store/search?q=homantra&hl=en")
+      .then(() => {
+        console.log("shareViaWhatsApp: Success");
+      }).catch(() => {
+      console.error("shareViaWhatsApp: failed");
+    });
+  }
+
+
 }

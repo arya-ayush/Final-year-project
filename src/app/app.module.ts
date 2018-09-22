@@ -31,6 +31,8 @@ import {ScreenOrientation} from "@ionic-native/screen-orientation";
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { FrequentVisitorPage } from "../pages/Admin/frequent-visitor";
+import { SocialSharing } from "@ionic-native/social-sharing";
+import { OneSignal } from "@ionic-native/onesignal";
 
 @NgModule({
   declarations: [
@@ -69,6 +71,8 @@ import { FrequentVisitorPage } from "../pages/Admin/frequent-visitor";
     FrequentVisitorPage
   ],
   providers: [
+    SocialSharing,
+    OneSignal,
     StatusBar,
     SplashScreen,
     ToastService,
