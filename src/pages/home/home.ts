@@ -8,6 +8,8 @@ import {VisitorLogPage} from "../visitor-log";
 import {NotificationMemberPage} from "../notification-member";
 import {Repository} from "../../app/repository/repository";
 import {OneSignal} from "@ionic-native/onesignal";
+import { LoginPage } from "../login";
+import { window } from "rxjs/operators";
 
 @Component({
   selector: 'page-home',
@@ -21,30 +23,30 @@ export class HomePage {
   }
 
   showProfile() {
-    // this.navCtrl.push(ProfilePage);
+    this.navCtrl.push(ProfilePage);
   }
 
   add() {
-    // this.navCtrl.push(AddMemberPage);
+    this.navCtrl.push(AddMemberPage);
   }
 
   notification(){
-    // this.navCtrl.push(NotificationMemberPage);
+    this.navCtrl.push(NotificationMemberPage);
   }
 
   visitorLog(){
-    // this.datePicker.show({
-    //   date: new Date(),
-    //   mode: 'date',
-    //   androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
-    // }).then(
-    //   (date) => {
-    //     this.navCtrl.push(VisitorLogPage,{'date':date , 'user': 'user'});
-    //   },
-    //   (err) => {
-    //     this.toast.error('Error occurred while getting date');
-    //   }
-    // );
+    this.datePicker.show({
+      date: new Date(),
+      mode: 'date',
+      androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
+    }).then(
+      (date) => {
+        this.navCtrl.push(VisitorLogPage,{'date':date , 'user': 'user'});
+      },
+      (err) => {
+        this.toast.error('Error occurred while getting date');
+      }
+    );
   }
 
   initialiseOneSignal(){
@@ -66,4 +68,10 @@ export class HomePage {
       })
     }
   }
+
+  logout() {
+    this.repository.adminLogout();
+    this.navCtrl.setRoot(LoginPage)
+  }
+
 }

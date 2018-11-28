@@ -33,9 +33,9 @@ import {OneSignal} from "@ionic-native/onesignal";
         </ion-item>
         <ion-item>
           <ion-icon item-start name="ios-home-outline"></ion-icon>
-          <h3>{{userObj.flat_num}}</h3>
-          <h3>{{userObj.block}}</h3>
-          <h3>{{userObj.society_name}}</h3>
+          <h3>Flat: {{userObj.flat_num}}</h3>
+          <h3>Block: {{userObj.block}}</h3>
+          <h3>Society: {{userObj.society_name}}</h3>
         </ion-item>
       </ion-list>
       <ion-row>

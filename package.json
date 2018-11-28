@@ -12,6 +12,7 @@
     "ionic:serve": "ionic-app-scripts serve"
   },
   "dependencies": {
+    "moment": "^2.19.2",
     "@angular/animations": "5.2.9",
     "@angular/common": "5.2.9",
     "@angular/compiler": "5.2.9",
@@ -36,6 +37,7 @@
     "@ngrx/core": "^1.2.0",
     "@ngrx/store": "^5.2.0",
     "cordova-android": "7.0.0",
+    "cordova-ios": "4.5.5",
     "cordova-plugin-background-mode": "^0.7.2",
     "cordova-plugin-camera": "^4.0.3",
     "cordova-plugin-datepicker": "^0.9.3",
@@ -58,6 +60,7 @@
     "zone.js": "0.8.20"
   },
   "devDependencies": {
+    "@angular/cli": "^7.0.6",
     "@ionic/app-scripts": "3.1.8",
     "typescript": "~2.6.2"
   },
@@ -79,7 +82,8 @@
       "cordova-plugin-x-socialsharing": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

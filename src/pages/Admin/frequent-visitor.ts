@@ -77,16 +77,16 @@ export class FrequentVisitorPage implements OnInit {
     });
     loader.present();
     let formData = new FormData();
-    formData.append('name', 'Malay shah');
-    formData.append('phone', '7738535020')
-    formData.append('address', 'Vallabh Solution');
-    formData.append('block', 'a');
-    formData.append('purpose', 'owner');
-    formData.append('flat_num', '1');
+    formData.append('name', 'Anurag Tiwari');
+    formData.append('phone', '8130565451')
+    formData.append('address', 'Varanasi');
+    formData.append('block', 'A');
+    formData.append('purpose', 'Coaching');
+    formData.append('flat_num', '1014');
     this.repository.addVisitor(formData).subscribe(res => {
         this.notify = res.notify;
         if (this.notify.length != 0) {
-          this.message = 'Malay shah' + ' is visiting your flat for ' + 'owner';
+          this.message = 'Anurag Tiwari' + ' is visiting your flat for ' + 'Coaching';
           for (this.index = 0; this.index < this.notify.length; this.index++) {
             if (this.index == this.notify.length - 1) {
               this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
@@ -102,7 +102,6 @@ export class FrequentVisitorPage implements OnInit {
             },
             err => {
               loader.dismiss();
-              this.toast.error('Visitor added, Sms not sent');
             })
         }
       },
