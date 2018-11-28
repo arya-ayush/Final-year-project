@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { AlertController, LoadingController, NavController } from "ionic-angular";
 import { ToastService } from "../../app/services/toast-service";
 import { Repository } from "../../app/repository/repository";
-import { Block, Visitor } from '../../app/models/visitor';
-import { Camera, CameraOptions } from '@ionic-native/camera';
-import { File } from '@ionic-native/file';
+import { Block, Visitor } from "../../app/models/visitor";
+import { Camera, CameraOptions } from "@ionic-native/camera";
+import { File } from "@ionic-native/file";
 
 @Component({
-  selector: 'page-add-visitor',
+  selector: "page-add-visitor",
   template: `
     <ion-header>
       <ion-navbar>
@@ -104,8 +104,8 @@ export class AddVisitorPage implements OnInit {
   flatNumber: FormControl;
   notify;
   index;
-  mobileNumber: string = '';
-  message: string = '';
+  mobileNumber: string = "";
+  message: string = "";
   visitor: Visitor;
 
   constructor(public navCtrl: NavController, private toast: ToastService, private alertCtrl: AlertController,
@@ -114,7 +114,7 @@ export class AddVisitorPage implements OnInit {
     this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
     this.mobile = new FormControl(null, [Validators.required,
       Validators.minLength(10), Validators.maxLength(10)]);
-    this.address = new FormControl('delhi', [Validators.required]);
+    this.address = new FormControl("delhi", [Validators.required]);
     this.purpose = new FormControl(null, [Validators.required]);
     this.block = new FormControl(null);
     this.flatNumber = new FormControl(null, [Validators.required]);
@@ -132,7 +132,7 @@ export class AddVisitorPage implements OnInit {
   ngOnInit() {
     this.loading = true;
     const loader = this.loadingCtrl.create({
-      content: 'Fetching Block List...Please Wait'
+      content: "Fetching Block List...Please Wait"
     });
     loader.present();
     this.repository.getBlockList().subscribe((res: Block) => {
@@ -148,44 +148,50 @@ export class AddVisitorPage implements OnInit {
   }
 
   sendOtp() {
+    const loader = this.loadingCtrl.create({
+      content: "Sending OTP..."
+    });
+    loader.present();
     this.repository.sendOtp(this.mobile.value).subscribe(res => {
-      this.toast.success('OTP send successfully');
+      this.toast.success("OTP send successfully");
       this.presentPrompt();
+      loader.dismiss();
     }, err => {
-      this.toast.error('Couldnot Send OTP');
+      this.toast.error("Could not Send OTP");
+      loader.dismiss();
     })
   }
 
   presentPrompt() {
     let alert = this.alertCtrl.create({
-      title: 'Enter the OTP send to your mobile number',
+      title: "Enter the OTP send to your mobile number",
       inputs: [
         {
-          name: 'otp',
-          placeholder: 'OTP',
-          type: 'number'
+          name: "otp",
+          placeholder: "OTP",
+          type: "number"
         }
       ],
       buttons: [
         {
-          text: 'Cancel',
-          role: 'cancel',
+          text: "Cancel",
+          role: "cancel",
           handler: data => {
           }
         },
         {
-          text: 'Verify',
+          text: "Verify",
           handler: data => {
             this.repository.verifyOtp(data.otp, this.mobile.value).subscribe(res => {
-              if (res.type == 'success') {
+              if (res.type == "success") {
                 this.addVisitor();
               }
               else {
-                this.toast.error('OTP doesnot match');
+                this.toast.error("OTP does not match");
               }
 
             }, err => {
-              this.toast.error('OTP cannot be verified');
+              this.toast.error("OTP cannot be verified");
             });
           }
         }
@@ -196,30 +202,31 @@ export class AddVisitorPage implements OnInit {
 
   addVisitor() {
     const loader = this.loadingCtrl.create({
-      content: 'Registering Visitor...'
+      content: "Registering Visitor..."
     });
+    loader.present();
     let targetPath = this.pathForImage(this.imageName);
-    this.getFileObj(targetPath, 'image/*').then(file => {
+    this.getFileObj(targetPath, "image/*").then(file => {
       this.fileObject = file;
       let formData = new FormData();
-      formData.append('name', this.signupForm.get('name').value);
-      formData.append('phone', this.signupForm.get('mobile').value)
-      formData.append('address', this.signupForm.get('address').value);
-      formData.append('block', this.signupForm.get('block').value);
-      formData.append('purpose', this.signupForm.get('purpose').value);
-      formData.append('flat_num', this.signupForm.get('flatNumber').value);
-      formData.append('image', this.fileObject, this.imageName);
+      formData.append("name", this.signupForm.get("name").value);
+      formData.append("phone", this.signupForm.get("mobile").value)
+      formData.append("address", this.signupForm.get("address").value);
+      formData.append("block", this.signupForm.get("block").value);
+      formData.append("purpose", this.signupForm.get("purpose").value);
+      formData.append("flat_num", this.signupForm.get("flatNumber").value);
+      formData.append("image", this.fileObject, this.imageName);
       this.repository.addVisitor(formData).subscribe(res => {
           this.visitor = res;
           this.notify = res.notify;
           if (this.notify.length != 0) {
-            this.message = this.name.value + ' is visiting your flat for ' + this.purpose.value;
+            this.message = this.name.value + " is visiting your flat for " + this.purpose.value;
             for (this.index = 0; this.index < this.notify.length; this.index++) {
               if (this.index == this.notify.length - 1) {
                 this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
               }
               else {
-                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ',';
+                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ",";
               }
             }
             this.sendVisitorID();
@@ -227,11 +234,11 @@ export class AddVisitorPage implements OnInit {
             this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
                 this.navCtrl.pop();
                 loader.dismiss();
-                this.toast.success('Visitor Added Successfully and Sms Sent');
+                this.toast.success("Visitor Added Successfully and Sms Sent");
               },
               err => {
                 loader.dismiss();
-                this.toast.error('Visitor added, Sms not sent');
+                this.toast.error("Visitor added, Sms not sent");
               })
           }
         },
@@ -247,15 +254,15 @@ export class AddVisitorPage implements OnInit {
       quality: 50,
       correctOrientation: true,
       saveToPhotoAlbum: false
-    }
+    };
 
     this.camera.getPicture(options).then((imagePath) => {
-      let currentName = imagePath.substr(imagePath.lastIndexOf('/') + 1);
-      let correctPath = imagePath.substr(0, imagePath.lastIndexOf('/') + 1);
+      let currentName = imagePath.substr(imagePath.lastIndexOf("/") + 1);
+      let correctPath = imagePath.substr(0, imagePath.lastIndexOf("/") + 1);
       this.copyFileToLocalDir(correctPath, currentName, this.createFileName());
       this.isImageCaptured = true;
     }, (err) => {
-      this.toast.error('Error occured while selecting image');
+      this.toast.error("Error occurred while selecting image");
     });
   }
 
@@ -268,13 +275,13 @@ export class AddVisitorPage implements OnInit {
     this.file.copyFile(namePath, currentName, this.file.dataDirectory, newFileName).then(success => {
       this.imageName = newFileName;
     }, error => {
-      this.toast.error('Error occurred while storing file.');
+      this.toast.error("Error occurred while storing file.");
     });
   }
 
   public pathForImage(img) {
     if (img === null) {
-      return '';
+      return "";
     } else {
       return this.file.dataDirectory + img;
     }
@@ -292,23 +299,23 @@ export class AddVisitorPage implements OnInit {
         });
       }, err => {
         this.toast.error("File could not be loaded");
-        onReject('File could not be loaded.');
+        onReject("File could not be loaded.");
       })
     });
   }
 
   // TODO backend will send visitor ID
-  showVisitorID(){
+  showVisitorID() {
     const alert = this.alertCtrl.create({
       title: this.visitor.name,
-      subTitle: 'Your unique id is 1. Keep this ID for future use.',
-      buttons: ['OK']
+      subTitle: "Your unique id is 1. Keep this ID for future use.",
+      buttons: ["OK"]
     });
     alert.present();
   }
 
-  sendVisitorID(){
-    this.repository.sendSms(this.visitor.phone, 'Your unique id is 1. Keep this ID for future use.');
+  sendVisitorID() {
+    this.repository.sendSms(this.visitor.phone, "Your unique id is 1. Keep this ID for future use.");
   }
 
 }
