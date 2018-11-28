@@ -73,16 +73,16 @@ export class FrequentVisitorPage implements OnInit {
   // TODO id of the visitor will be send which will return visitor object and then post API of adding visitor will be called.
   addVisitor() {
     const loader = this.loadingCtrl.create({
-      content: 'Registering Visitor...'
+      content: 'Registering Visitor'
     });
     loader.present();
     let formData = new FormData();
     formData.append('name', 'Anurag Tiwari');
     formData.append('phone', '8130565451')
     formData.append('address', 'Varanasi');
-    formData.append('block', 'A');
-    formData.append('purpose', 'Coaching');
-    formData.append('flat_num', '1014');
+    formData.append('block', 'a');
+    formData.append('purpose', 'Take IAS Coaching');
+    formData.append('flat_num', '101');
     this.repository.addVisitor(formData).subscribe(res => {
         this.notify = res.notify;
         if (this.notify.length != 0) {
@@ -104,6 +104,7 @@ export class FrequentVisitorPage implements OnInit {
               loader.dismiss();
             })
         }
+        loader.dismiss();
       },
       err => {
         loader.dismiss();
