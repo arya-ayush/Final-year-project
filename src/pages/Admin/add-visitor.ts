@@ -67,7 +67,7 @@ import { File } from "@ionic-native/file";
         </ion-item>
         <ion-item style="margin-top: 5vh">
           <ion-label style="color: #9f9f9f ">Frequent Visitor</ion-label>
-          <ion-toggle checked="false"></ion-toggle>
+          <ion-toggle #toggle [checked]="checked" (ionChange)="toggleFV(toggle)"></ion-toggle>
         </ion-item>
         <div style="height:10px"></div>
         <ion-grid>
@@ -104,6 +104,7 @@ export class AddVisitorPage implements OnInit {
   flatNumber: FormControl;
   notify;
   index;
+  checked = false;
   mobileNumber: string = "";
   message: string = "";
   visitor: Visitor;
@@ -163,6 +164,9 @@ export class AddVisitorPage implements OnInit {
   }
 
   presentPrompt() {
+    const loader = this.loadingCtrl.create({
+      content: "Verifying OTP"
+    });
     let alert = this.alertCtrl.create({
       title: "Enter the OTP send to your mobile number",
       inputs: [
@@ -182,6 +186,7 @@ export class AddVisitorPage implements OnInit {
         {
           text: "Verify",
           handler: data => {
+            loader.present();
             this.repository.verifyOtp(data.otp, this.mobile.value).subscribe(res => {
               if (res.type == "success") {
                 this.addVisitor();
@@ -189,9 +194,10 @@ export class AddVisitorPage implements OnInit {
               else {
                 this.toast.error("OTP does not match");
               }
-
+              loader.dismiss();
             }, err => {
               this.toast.error("OTP cannot be verified");
+              loader.dismiss();
             });
           }
         }
@@ -202,51 +208,56 @@ export class AddVisitorPage implements OnInit {
 
   addVisitor() {
     const loader = this.loadingCtrl.create({
-      content: "Registering Visitor..."
+      content: "Registering Visitor"
     });
     loader.present();
-    let targetPath = this.pathForImage(this.imageName);
-    this.getFileObj(targetPath, "image/*").then(file => {
-      this.fileObject = file;
-      let formData = new FormData();
-      formData.append("name", this.signupForm.get("name").value);
-      formData.append("phone", this.signupForm.get("mobile").value)
-      formData.append("address", this.signupForm.get("address").value);
-      formData.append("block", this.signupForm.get("block").value);
-      formData.append("purpose", this.signupForm.get("purpose").value);
-      formData.append("flat_num", this.signupForm.get("flatNumber").value);
-      formData.append("image", this.fileObject, this.imageName);
-      this.repository.addVisitor(formData).subscribe(res => {
-          this.visitor = res;
-          this.notify = res.notify;
-          if (this.notify.length != 0) {
-            this.message = this.name.value + " is visiting your flat for " + this.purpose.value;
-            for (this.index = 0; this.index < this.notify.length; this.index++) {
-              if (this.index == this.notify.length - 1) {
-                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
-              }
-              else {
-                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ",";
-              }
+
+    // let targetPath = this.pathForImage(this.imageName);
+    // this.getFileObj(targetPath, "image/*").then(file => {
+    //   this.fileObject = file;
+    // });
+
+    let formData = new FormData();
+    formData.append("name", this.signupForm.get("name").value);
+    formData.append("phone", this.signupForm.get("mobile").value)
+    formData.append("address", this.signupForm.get("address").value);
+    formData.append("block", this.signupForm.get("block").value);
+    formData.append("purpose", this.signupForm.get("purpose").value);
+    formData.append("flat_num", this.signupForm.get("flatNumber").value);
+    formData.append("image", this.fileObject, this.imageName);
+    this.repository.addVisitor(formData).subscribe(res => {
+        this.visitor = res;
+        this.notify = res.notify;
+        if(this.checked) {
+          this.sendVisitorID();
+          this.showVisitorID();
+        }
+        if (this.notify.length != 0) {
+          this.message = this.name.value + " is visiting your flat for " + this.purpose.value;
+          for (this.index = 0; this.index < this.notify.length; this.index++) {
+            if (this.index == this.notify.length - 1) {
+              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
             }
-            this.sendVisitorID();
-            this.showVisitorID();
-            this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
-                this.navCtrl.pop();
-                loader.dismiss();
-                this.toast.success("Visitor Added Successfully and Sms Sent");
-              },
-              err => {
-                loader.dismiss();
-                this.toast.error("Visitor added, Sms not sent");
-              })
+            else {
+              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ",";
+            }
           }
-        },
-        err => {
-          loader.dismiss();
-          this.toast.error(err.error.error);
-        })
-    });
+          this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
+              this.navCtrl.pop();
+              loader.dismiss();
+              this.toast.success("Visitor Added Successfully and Sms Sent");
+            },
+            err => {
+              loader.dismiss();
+              this.toast.error("Visitor added, Sms not sent");
+            })
+        }
+        loader.dismiss();
+      },
+      err => {
+        loader.dismiss();
+        this.toast.error(err.error.error);
+      })
   }
 
   getImage() {
@@ -306,6 +317,7 @@ export class AddVisitorPage implements OnInit {
 
   // TODO backend will send visitor ID
   showVisitorID() {
+    console.log("show", this.visitor);
     const alert = this.alertCtrl.create({
       title: this.visitor.name,
       subTitle: "Your unique id is 1. Keep this ID for future use.",
@@ -316,6 +328,10 @@ export class AddVisitorPage implements OnInit {
 
   sendVisitorID() {
     this.repository.sendSms(this.visitor.phone, "Your unique id is 1. Keep this ID for future use.");
+  }
+
+  toggleFV(event) {
+    this.checked = event.value;
   }
 
 }
