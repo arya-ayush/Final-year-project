@@ -198,7 +198,6 @@ export class AddVisitorPage implements OnInit {
     const loader = this.loadingCtrl.create({
       content: 'Registering Visitor...'
     });
-    loader.present();
     let targetPath = this.pathForImage(this.imageName);
     this.getFileObj(targetPath, 'image/*').then(file => {
       this.fileObject = file;
@@ -269,7 +268,7 @@ export class AddVisitorPage implements OnInit {
     this.file.copyFile(namePath, currentName, this.file.dataDirectory, newFileName).then(success => {
       this.imageName = newFileName;
     }, error => {
-      this.toast.error('Error occured while storing file.');
+      this.toast.error('Error occurred while storing file.');
     });
   }
 

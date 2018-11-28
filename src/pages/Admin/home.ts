@@ -1,17 +1,18 @@
-import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
-import {Service} from "../../app/services/service";
-import {VisitorLogPage} from "../visitor-log";
-import {DatePicker} from "@ionic-native/date-picker";
-import {ToastService} from "../../app/services/toast-service";
-import {AddFlatOwnerPage} from "./add-flat-owner";
-import {AddVisitorPage} from "./add-visitor";
-import {LoginPage} from "../login";
-import {Repository} from "../../app/repository/repository";
+import { Component } from "@angular/core";
+import { NavController } from "ionic-angular";
+import { Service } from "../../app/services/service";
+import { VisitorLogPage } from "../visitor-log";
+import { DatePicker } from "@ionic-native/date-picker";
+import { ToastService } from "../../app/services/toast-service";
+import { AddFlatOwnerPage } from "./add-flat-owner";
+import { AddVisitorPage } from "./add-visitor";
+import { LoginPage } from "../login";
+import { Repository } from "../../app/repository/repository";
 import { FrequentVisitorPage } from "./frequent-visitor";
+import { SocialSharing } from "@ionic-native/social-sharing";
 
 @Component({
-  selector: 'page-admin-home',
+  selector: "page-admin-home",
   template: `
 
     <ion-header>
@@ -22,7 +23,7 @@ import { FrequentVisitorPage } from "./frequent-visitor";
           </button>
         </ion-buttons>
         <ion-title>
-          Admin Dashboard
+          Security Dashboard
         </ion-title>
       </ion-navbar>
     </ion-header>
@@ -30,34 +31,35 @@ import { FrequentVisitorPage } from "./frequent-visitor";
     <ion-content class="vertical-align-content" text-center>
       <ion-grid style="padding: 0;margin: 0;">
         <ion-row style="height:47vh;display: table;">
-          <ion-col col-6 style="background-color: #ECF6EE;display: table-cell;vertical-align: middle;"
+          <ion-col col-6 style="background-color: #e9e9ff;display: table-cell;vertical-align: middle;"
                    (click)="addVisitor()">
-            <ion-icon style="zoom:5;color:#42A450" name="ios-contacts-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#5263FF" name="ios-contacts-outline"></ion-icon>
             <h3>Add Visitor</h3>
           </ion-col>
           <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="todayLog()">
-            <ion-icon style="zoom:5;color:#42A450" name="ios-calendar-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#5263FF" name="ios-calendar-outline"></ion-icon>
             <h3>Today's Log</h3>
           </ion-col>
         </ion-row>
         <ion-row style="height:47vh;display: table;">
           <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="visitorLog()">
-            <ion-icon style="zoom:5;color:#42A450" name="ios-archive-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#5263FF" name="ios-archive-outline"></ion-icon>
             <h3>Visitor Log</h3>
           </ion-col>
-          <ion-col col-6 style="background-color: #ECF6EE;display: table-cell;vertical-align: middle;"
+          <ion-col col-6 style="background-color: #e9e9ff;display: table-cell;vertical-align: middle;"
                    (click)="addFlatOwner()">
-            <ion-icon style="zoom:5;color:#42A450" name="ios-paper-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#5263FF" name="ios-paper-outline"></ion-icon>
             <h3>Add Flat Owner</h3>
           </ion-col>
         </ion-row>
         <ion-row style="height:47vh;display: table;">
-          <ion-col col-6 style="background-color:#ECF6EE;display: table-cell;vertical-align: middle;" (click)="frequentVisitor()">
-            <ion-icon style="zoom:5;color:#42A450" name="ios-people-outline"></ion-icon>
+          <ion-col col-6 style="background-color:#e9e9ff;display: table-cell;vertical-align: middle;"
+                   (click)="frequentVisitor()">
+            <ion-icon style="zoom:5;color:#5263FF" name="ios-people-outline"></ion-icon>
             <h3>Frequent Visitor</h3>
           </ion-col>
-          <ion-col col-6 style="display: table-cell;vertical-align: middle;">
-            <ion-icon style="zoom:5;color:#42A450" name="ios-share-outline"></ion-icon>
+          <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="share()">
+            <ion-icon style="zoom:5;color:#5263FF" name="ios-share-outline"></ion-icon>
             <h3>Share App</h3>
           </ion-col>
         </ion-row>
@@ -73,30 +75,28 @@ export class AdminHomePage {
 
   constructor(public navCtrl: NavController, public service: Service,
               private datePicker: DatePicker, private toast: ToastService,
-              private repository: Repository) {
+              private repository: Repository, private socialSharing: SocialSharing) {
 
   }
 
   visitorLog() {
     this.datePicker.show({
       date: new Date(),
-      mode: 'date',
+      mode: "date",
       androidTheme: this.datePicker.ANDROID_THEMES.THEME_DEVICE_DEFAULT_LIGHT
     }).then(
       (date) => {
-        this.navCtrl.push(VisitorLogPage, {'date': date, 'user': 'admin'});
+        this.navCtrl.push(VisitorLogPage, { "date": date, "user": "admin" });
       },
       (err) => {
-        this.toast.error('Error occurred while getting date');
+        this.toast.error("Error occurred while getting date");
       }
     );
   }
 
   todayLog() {
     const date = new Date().toLocaleDateString();
-    console.log(date);
-    // = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2);
-    this.navCtrl.push(VisitorLogPage, {'date': date, 'user': 'admin'});
+    this.navCtrl.push(VisitorLogPage, { "date": date, "user": "admin" });
   }
 
   addFlatOwner() {
@@ -108,12 +108,23 @@ export class AdminHomePage {
   }
 
   logout() {
-    this.repository.logout();
+    this.repository.adminLogout();
     this.navCtrl.setRoot(LoginPage)
   }
 
-  frequentVisitor(){
+  frequentVisitor() {
     this.navCtrl.push(FrequentVisitorPage);
 
   }
+
+  share() {
+    this.socialSharing.share("Download this awesome app", null, null, "The app is awaited to come on playstore.")
+      .then(() => {
+        console.log("shareViaWhatsApp: Success");
+      }).catch(() => {
+      console.error("shareViaWhatsApp: failed");
+    });
+  }
+
+
 }

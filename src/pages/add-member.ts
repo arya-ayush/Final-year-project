@@ -15,7 +15,7 @@ import {ToastService} from "../app/services/toast-service";
     </ion-header>
     <ion-content>
       <ion-grid>
-        <ion-row>Y
+        <ion-row>
           <ion-col *ngIf="length>0 && !loading" col-sm-12>
             <ion-card *ngFor="let member of members" (click)="presentAlert(member)">
               <ion-card-content>

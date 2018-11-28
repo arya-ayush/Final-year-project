@@ -36,13 +36,14 @@ import {Repository} from "../app/repository/repository";
               </ion-item>
             </ion-row>
             <div align="center" style="margin-top: 25px;">
-              <button style="width:40%" ion-button round outline small type="button"
+              <button style="width: 50%%; padding: 5%;" ion-button round outline small type="button"
                       [disabled]="!loginForm.valid && loginForm.touched" (click)="loginUser()">
-                Login as User
+                Home Owner
               </button>
-              <button style="width:40%" ion-button round outline small type="button"
+              <span style="flex:  1 1 0"></span>
+              <button style="width:50%; padding: 5%" ion-button round outline small type="button"
                       [disabled]="!loginForm.valid && loginForm.touched " (click)="loginAdmin()">
-                Login as Society
+                Security Personnel 
               </button>
             </div>
           </ion-grid>
@@ -103,6 +104,5 @@ export class LoginPage {
     })
 
   }
-
 
 }

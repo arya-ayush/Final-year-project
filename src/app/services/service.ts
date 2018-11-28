@@ -59,8 +59,23 @@ export class Service {
         return <User>response;
       });
   }
-
-  logout() {
+  logout(deviceId) : Observable<any> {
+    const userName = JSON.parse(localStorage.getItem('user')).username;
+    const societyName = JSON.parse(localStorage.getItem('user')).society_name;
+    const block = JSON.parse(localStorage.getItem('user')).block;
+    const flatNum = JSON.parse(localStorage.getItem('user')).flat_num;
+    return this.http.post(BASE_URL + 'checkout', {
+      username: userName ,
+      society_name: societyName ,
+      flat_num : flatNum ,
+      block: block,
+      device_id : deviceId
+    }, {}).map( res => {
+      localStorage.clear();
+      return res;
+    })
+  }
+  adminLogout() {
     localStorage.clear();
   }
 
@@ -187,6 +202,22 @@ export class Service {
       .map(res =>{
         return res;
       });
+  }
+
+  addOneSignalId(deviceId): Observable<any> {
+    const userName = JSON.parse(localStorage.getItem('user')).username;
+    const societyName = JSON.parse(localStorage.getItem('user')).society_name;
+    const block = JSON.parse(localStorage.getItem('user')).block;
+    const flatNum = JSON.parse(localStorage.getItem('user')).flat_num;
+    return this.http.post(BASE_URL+ 'checkin',{
+      username: userName ,
+      society_name: societyName ,
+      flat_num : flatNum ,
+      block: block,
+      device_id : deviceId
+    }, {headers: this.getHeaders()}).map( res => {
+      return res;
+    });
   }
 
 }
