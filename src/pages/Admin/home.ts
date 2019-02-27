@@ -23,7 +23,7 @@ import { SocialSharing } from "@ionic-native/social-sharing";
           </button>
         </ion-buttons>
         <ion-title>
-          Security Dashboard
+          Admin Dashboard
         </ion-title>
       </ion-navbar>
     </ion-header>
@@ -31,40 +31,41 @@ import { SocialSharing } from "@ionic-native/social-sharing";
     <ion-content class="vertical-align-content" text-center>
       <ion-grid style="padding: 0;margin: 0;">
         <ion-row style="height:47vh;display: table;">
-          <ion-col col-6 style="background-color: #e9e9ff;display: table-cell;vertical-align: middle;"
+          <ion-col col-6 style="background-color: #ECF6EE;display: table-cell;vertical-align: middle;"
                    (click)="addVisitor()">
-            <ion-icon style="zoom:5;color:#5263FF" name="ios-contacts-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#42A450" name="ios-contacts-outline"></ion-icon>
             <h3>Add Visitor</h3>
           </ion-col>
           <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="todayLog()">
-            <ion-icon style="zoom:5;color:#5263FF" name="ios-calendar-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#42A450" name="ios-calendar-outline"></ion-icon>
             <h3>Today's Log</h3>
           </ion-col>
         </ion-row>
         <ion-row style="height:47vh;display: table;">
           <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="visitorLog()">
-            <ion-icon style="zoom:5;color:#5263FF" name="ios-archive-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#42A450" name="ios-archive-outline"></ion-icon>
             <h3>Visitor Log</h3>
           </ion-col>
-          <ion-col col-6 style="background-color: #e9e9ff;display: table-cell;vertical-align: middle;"
+          <ion-col col-6 style="background-color: #ECF6EE;display: table-cell;vertical-align: middle;"
                    (click)="addFlatOwner()">
-            <ion-icon style="zoom:5;color:#5263FF" name="ios-paper-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#42A450" name="ios-paper-outline"></ion-icon>
             <h3>Add Flat Owner</h3>
           </ion-col>
         </ion-row>
         <ion-row style="height:47vh;display: table;">
-          <ion-col col-6 style="background-color:#e9e9ff;display: table-cell;vertical-align: middle;"
+          <ion-col col-6 style="background-color:#ECF6EE;display: table-cell;vertical-align: middle;"
                    (click)="frequentVisitor()">
-            <ion-icon style="zoom:5;color:#5263FF" name="ios-people-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#42A450" name="ios-people-outline"></ion-icon>
             <h3>Frequent Visitor</h3>
           </ion-col>
           <ion-col col-6 style="display: table-cell;vertical-align: middle;" (click)="share()">
-            <ion-icon style="zoom:5;color:#5263FF" name="ios-share-outline"></ion-icon>
+            <ion-icon style="zoom:5;color:#42A450" name="ios-share-outline"></ion-icon>
             <h3>Share App</h3>
           </ion-col>
         </ion-row>
       </ion-grid>
     </ion-content>
+
 
   `,
   styles: [`
@@ -114,7 +115,6 @@ export class AdminHomePage {
 
   frequentVisitor() {
     this.navCtrl.push(FrequentVisitorPage);
-
   }
 
   share() {

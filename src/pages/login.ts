@@ -38,12 +38,12 @@ import {Repository} from "../app/repository/repository";
             <div align="center" style="margin-top: 25px;">
               <button style="width: 50%%; padding: 5%;" ion-button round outline small type="button"
                       [disabled]="!loginForm.valid && loginForm.touched" (click)="loginUser()">
-                Home Owner
+                Login as User
               </button>
               <span style="flex:  1 1 0"></span>
               <button style="width:50%; padding: 5%" ion-button round outline small type="button"
                       [disabled]="!loginForm.valid && loginForm.touched " (click)="loginAdmin()">
-                Security Personnel 
+                Login as Society 
               </button>
             </div>
           </ion-grid>
@@ -65,10 +65,8 @@ export class LoginPage {
               public loadingCtrl: LoadingController,
               public repository: Repository) {
 
-    //this.email = new FormControl(null, [Validators.required, Validators.email]);
     this.username = new FormControl(null, Validators.required);
     this.password = new FormControl(null, Validators.required);
-    //this.password = new FormControl(null, [Validators.required, Validators.minLength(8)]);
     this.loginForm = new FormGroup({
       username: this.username,
       password: this.password,

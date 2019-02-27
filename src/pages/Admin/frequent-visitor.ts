@@ -45,7 +45,7 @@ import { File } from "@ionic-native/file";
   `,
   styles: [`
 
-  `]
+           `]
 })
 export class FrequentVisitorPage implements OnInit {
 
@@ -77,16 +77,16 @@ export class FrequentVisitorPage implements OnInit {
     });
     loader.present();
     let formData = new FormData();
-    formData.append('name', 'Anurag Tiwari');
-    formData.append('phone', '8130565451')
-    formData.append('address', 'Varanasi');
+    formData.append('name', 'Malay Shah');
+    formData.append('phone', '7718877239')
+    formData.append('address', 'Mumbai');
     formData.append('block', 'a');
-    formData.append('purpose', 'Take IAS Coaching');
+    formData.append('purpose', 'Playing Game');
     formData.append('flat_num', '101');
     this.repository.addVisitor(formData).subscribe(res => {
         this.notify = res.notify;
         if (this.notify.length != 0) {
-          this.message = 'Anurag Tiwari' + ' is visiting your flat for ' + 'Coaching';
+          this.message = 'Malay Shah' + ' is visiting your flat for ' + 'Playing Game';
           for (this.index = 0; this.index < this.notify.length; this.index++) {
             if (this.index == this.notify.length - 1) {
               this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;

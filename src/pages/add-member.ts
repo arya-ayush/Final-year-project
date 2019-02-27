@@ -95,7 +95,7 @@ export class AddMemberPage implements OnInit {
               this.toast.success('Member Deleted Successfully');
             },err => {
               loader.dismiss();
-              this.toast.error('Some Error Occured');
+              this.toast.error('Some Error Occurred');
             });
           }
         },

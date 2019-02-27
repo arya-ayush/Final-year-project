@@ -91,6 +91,7 @@ export class SignupMemberPage {
   constructor(public navCtrl: NavController, private toast: ToastService,
               private repository: Repository, private navParams: NavParams,
               private loadingCtrl: LoadingController) {
+
     this.member = this.navParams.get('member');
     if (this.member) {
       this.text = 'Update Member';
@@ -101,7 +102,7 @@ export class SignupMemberPage {
       this.default = false;
     }
     this.name = new FormControl(this.member ? this.member.name : null, [Validators.required, Validators.minLength(3)]);
-    this.email = new FormControl(this.member ? this.member.email : null, [Validators.required, , Validators.email]);
+    this.email = new FormControl(this.member ? this.member.email : null, [Validators.required, Validators.email]);
     this.mobile = new FormControl(this.member ? this.member.phone : null, [Validators.required,
       Validators.minLength(10), Validators.maxLength(10)]);
     this.gender = new FormControl(this.member ? this.member.gender : 'M', [Validators.required]);
@@ -161,4 +162,5 @@ export class SignupMemberPage {
         })
     }
   }
+
 }

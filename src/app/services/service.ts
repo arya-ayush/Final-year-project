@@ -9,7 +9,7 @@ import { Block, Visitor } from "../models/visitor";
 const BASE_URL = 'http://vallabh-final.herokuapp.com/';
 const MSG_BASE_URL = 'http://control.msg91.com/api/';
 const SMS_BASE_URL = 'http://api.msg91.com/api/';
-const Auth_Key = '162965AXHuE54859533cfb';
+const Auth_Key = '195508AHPultBvz5a6dd7f2';
 @Injectable()
 export class Service {
   constructor(private http: HttpClient) {
@@ -170,7 +170,7 @@ export class Service {
           'authkey':Auth_Key,
           'message':'Your OTP is ##OTP##',
           'sender': 'Homantra',
-          'mobile':mobileNumber
+          'mobile':91+mobileNumber
       }})
       .map(res =>{
         return res;
@@ -181,7 +181,7 @@ export class Service {
     return this.http.post(MSG_BASE_URL+'verifyRequestOTP.php',{},
       {params:{
           'authkey':Auth_Key,
-          'mobile':mobileNumber,
+          'mobile':91+mobileNumber,
           'otp':otp
       }})
       .map(res => {
