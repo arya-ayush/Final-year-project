@@ -115,7 +115,7 @@ export class VisitorLogPage implements OnInit {
   }
 
   linkForImage(image) {
-    const link: string = "http://vallabh-final.herokuapp.com" + image;
-    return link;
+    return "http://vallabh-final.herokuapp.com" + image;
   }
+
 }

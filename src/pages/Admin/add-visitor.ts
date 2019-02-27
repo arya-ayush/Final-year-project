@@ -1,11 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AlertController, LoadingController, NavController } from "ionic-angular";
-import { ToastService } from "../../app/services/toast-service";
-import { Repository } from "../../app/repository/repository";
-import { Block, Visitor } from "../../app/models/visitor";
-import { Camera, CameraOptions } from "@ionic-native/camera";
-import { File } from "@ionic-native/file";
+import {Component, OnInit} from "@angular/core";
+import {FormControl, FormGroup, Validators} from "@angular/forms";
+import {AlertController, LoadingController, NavController} from "ionic-angular";
+import {ToastService} from "../../app/services/toast-service";
+import {Repository} from "../../app/repository/repository";
+import {Block, Visitor} from "../../app/models/visitor";
+import {Camera, CameraOptions} from "@ionic-native/camera";
+import {File} from "@ionic-native/file";
+import {FrequentVisitorPage} from "./frequent-visitor";
+import {AdminHomePage} from "./home";
 
 @Component({
   selector: "page-add-visitor",
@@ -15,86 +17,88 @@ import { File } from "@ionic-native/file";
         <ion-title>Add Visitor</ion-title>
       </ion-navbar>
     </ion-header>
-    <ion-content *ngIf="loading == false" padding style="margin-top:5vh;">
+    <ion-content *ngIf = "loading == false" padding style = "margin-top:5vh;">
       <ion-item>
-        <button ion-button color="secondary" (click)="getImage()">Get Image</button>
+        <button ion-button color = "secondary" (click) = "getImage()">Get Image</button>
       </ion-item>
-      <ion-item *ngIf="isImageCaptured">
+      <ion-item *ngIf = "isImageCaptured">
         <h4>Image Preview</h4>
-        <img src="{{pathForImage(imageName)}}" alt="Ionic File" width="300"/>
+        <img src = "{{pathForImage(imageName)}}" alt = "Ionic File" width = "300"/>
       </ion-item>
-      <form [formGroup]="signupForm" (submit)="signupForm.valid && sendOtp()">
+      <form [formGroup] = "signupForm" (submit) = "signupForm.valid && sendOtp()">
         <ion-item>
           <ion-label floating>Name</ion-label>
-          <ion-input formControlName="name"></ion-input>
+          <ion-input formControlName = "name"></ion-input>
         </ion-item>
-        <ion-item no-lines *ngIf="signupForm.get('name').invalid &&
-           signupForm.get('name').touched" style="margin-bottom:0px;">
-          <p style="color:red;" *ngIf="signupForm.get('name').hasError('required');">User Name is Required</p>
-          <p style="color:red;" *ngIf="!signupForm.get('name').hasError('required');">Minlength should be 3</p>
+        <ion-item no-lines *ngIf = "signupForm.get('name').invalid &&
+           signupForm.get('name').touched" style = "margin-bottom:0px;">
+          <p style = "color:red;" *ngIf = "signupForm.get('name').hasError('required');">User Name is Required</p>
+          <p style = "color:red;" *ngIf = "!signupForm.get('name').hasError('required');">Minlength should be 3</p>
         </ion-item>
         <ion-item>
           <ion-label floating>Mobile Number</ion-label>
-          <ion-input formControlName="mobile" type="number"></ion-input>
+          <ion-input formControlName = "mobile" type = "number"></ion-input>
         </ion-item>
-        <ion-item no-lines *ngIf="signupForm.get('mobile').invalid &&
-           signupForm.get('mobile').touched" style="margin-bottom:0px;">
-          <p style="color:red;" *ngIf="signupForm.get('mobile').hasError('required');">Mobile Number is Required</p>
-          <p style="color:red;" *ngIf="!signupForm.get('mobile').hasError('required');">Length should be 10</p>
+        <ion-item no-lines *ngIf = "signupForm.get('mobile').invalid &&
+           signupForm.get('mobile').touched" style = "margin-bottom:0px;">
+          <p style = "color:red;" *ngIf = "signupForm.get('mobile').hasError('required');">Mobile Number is Required</p>
+          <p style = "color:red;" *ngIf = "!signupForm.get('mobile').hasError('required');">Length should be 10</p>
         </ion-item>
-        <h4 style="text-align:center;">Visiting To:</h4>
+        <h4 style = "text-align:center;">Visiting To:</h4>
         <ion-item>
           <ion-label>Block</ion-label>
-          <ion-select formControlName="block">
-            <ion-option *ngFor="let block of blocks" [value]="block">{{block}}</ion-option>
+          <ion-select formControlName = "block">
+            <ion-option *ngFor = "let block of blocks" [value] = "block">{{block}}</ion-option>
           </ion-select>
         </ion-item>
         <ion-item>
           <ion-label floating>Flat Number</ion-label>
-          <ion-input formControlName="flatNumber" type="text"></ion-input>
+          <ion-input formControlName = "flatNumber" type = "text"></ion-input>
         </ion-item>
-        <ion-item no-lines *ngIf="signupForm.get('flatNumber').invalid &&
-           signupForm.get('flatNumber').touched" style="margin-bottom:0px;">
-          <p style="color:red;">Flat Number is Required</p>
+        <ion-item no-lines *ngIf = "signupForm.get('flatNumber').invalid &&
+           signupForm.get('flatNumber').touched" style = "margin-bottom:0px;">
+          <p style = "color:red;">Flat Number is Required</p>
         </ion-item>
         <ion-item>
           <ion-label floating>Purpose</ion-label>
-          <ion-input formControlName="purpose" type="text"></ion-input>
+          <ion-input formControlName = "purpose" type = "text"></ion-input>
         </ion-item>
-        <ion-item no-lines *ngIf="signupForm.get('purpose').invalid &&
-           signupForm.get('purpose').touched" style="margin-bottom:0px;">
-          <p style="color:red;">Purpose is Required</p>
+        <ion-item no-lines *ngIf = "signupForm.get('purpose').invalid &&
+           signupForm.get('purpose').touched" style = "margin-bottom:0px;">
+          <p style = "color:red;">Purpose is Required</p>
         </ion-item>
-        <ion-item style="margin-top: 5vh">
-          <ion-label style="color: #9f9f9f ">Frequent Visitor</ion-label>
-          <ion-toggle #toggle [checked]="checked" (ionChange)="toggleFV(toggle)"></ion-toggle>
+        <ion-item style = "margin-top: 5vh">
+          <ion-label style = "color: #9f9f9f ">Frequent Visitor</ion-label>
+          <ion-toggle #toggle [checked] = "checked" (ionChange) = "toggleFV(toggle)"></ion-toggle>
         </ion-item>
-        <div style="height:10px"></div>
+        <div style = "height:10px"></div>
         <ion-grid>
           <ion-row>
             <ion-col col-md-5 col-sm-4></ion-col>
             <ion-col>
-              <button [disabled]="!signupForm.valid " ion-button type="submit" outline round>
+              <button [disabled] = "!signupForm.valid " ion-button type = "submit" outline round>
                 Add Visitor
               </button>
             </ion-col>
             <ion-col col-md-5 col-sm-4></ion-col>
           </ion-row>
         </ion-grid>
-        <div style="height:10px"></div>
+        <div style = "height:10px"></div>
       </form>
     </ion-content>
   `,
-  styles: [`
+  styles  : [
+      `
 
-  `]
+      `
+  ]
 })
 export class AddVisitorPage implements OnInit {
   fileObject;
   imageName: any;
   isImageCaptured: boolean = false;
-  loading: boolean = true;
-  blocks: string[] = [];
+  loading: boolean         = true;
+  blocks: string[]         = [];
   signupForm: FormGroup;
   name: FormControl;
   mobile: FormControl;
@@ -102,30 +106,32 @@ export class AddVisitorPage implements OnInit {
   block: FormControl;
   purpose: FormControl;
   flatNumber: FormControl;
-  notify;
+  notify = [];
   index;
-  checked = false;
-  mobileNumber: string = "";
-  message: string = "";
+  checked                  = false;
+  mobileNumber: string     = "";
+  message: string          = "";
   visitor: Visitor;
 
   constructor(public navCtrl: NavController, private toast: ToastService, private alertCtrl: AlertController,
               private repository: Repository, private loadingCtrl: LoadingController, private camera: Camera,
               private file: File) {
-    this.name = new FormControl(null, [Validators.required, Validators.minLength(3)]);
-    this.mobile = new FormControl(null, [Validators.required,
-      Validators.minLength(10), Validators.maxLength(10)]);
-    this.address = new FormControl("delhi", [Validators.required]);
-    this.purpose = new FormControl(null, [Validators.required]);
-    this.block = new FormControl(null);
+    this.name       = new FormControl(null, [Validators.required, Validators.minLength(3)]);
+    this.mobile     = new FormControl(null, [
+      Validators.required,
+      Validators.minLength(10), Validators.maxLength(10)
+    ]);
+    this.address    = new FormControl("delhi", [Validators.required]);
+    this.purpose    = new FormControl(null, [Validators.required]);
+    this.block      = new FormControl(null);
     this.flatNumber = new FormControl(null, [Validators.required]);
 
     this.signupForm = new FormGroup({
-      name: this.name,
-      mobile: this.mobile,
-      address: this.address,
-      purpose: this.purpose,
-      block: this.block,
+      name      : this.name,
+      mobile    : this.mobile,
+      address   : this.address,
+      purpose   : this.purpose,
+      block     : this.block,
       flatNumber: this.flatNumber,
     })
   }
@@ -167,24 +173,24 @@ export class AddVisitorPage implements OnInit {
     const loader = this.loadingCtrl.create({
       content: "Verifying OTP"
     });
-    let alert = this.alertCtrl.create({
-      title: "Enter the OTP send to your mobile number",
-      inputs: [
+    let alert    = this.alertCtrl.create({
+      title  : "Enter the OTP send to your mobile number",
+      inputs : [
         {
-          name: "otp",
+          name       : "otp",
           placeholder: "OTP",
-          type: "number"
+          type       : "number"
         }
       ],
       buttons: [
         {
-          text: "Cancel",
-          role: "cancel",
+          text   : "Cancel",
+          role   : "cancel",
           handler: data => {
           }
         },
         {
-          text: "Verify",
+          text   : "Verify",
           handler: data => {
             loader.present();
             this.repository.verifyOtp(data.otp, this.mobile.value).subscribe(res => {
@@ -212,59 +218,69 @@ export class AddVisitorPage implements OnInit {
     });
     loader.present();
 
-    // let targetPath = this.pathForImage(this.imageName);
-    // this.getFileObj(targetPath, "image/*").then(file => {
-    //   this.fileObject = file;
-    // });
+    let targetPath = this.pathForImage(this.imageName);
+    this.getFileObj(targetPath, "image/*").then(file => {
+      this.fileObject = file;
 
-    let formData = new FormData();
-    formData.append("name", this.signupForm.get("name").value);
-    formData.append("phone", this.signupForm.get("mobile").value)
-    formData.append("address", this.signupForm.get("address").value);
-    formData.append("block", this.signupForm.get("block").value);
-    formData.append("purpose", this.signupForm.get("purpose").value);
-    formData.append("flat_num", this.signupForm.get("flatNumber").value);
-    formData.append("image", this.fileObject, this.imageName);
-    this.repository.addVisitor(formData).subscribe(res => {
-        this.visitor = res;
-        this.notify = res.notify;
-        if(this.checked) {
-          this.sendVisitorID();
-          this.showVisitorID();
-        }
-        if (this.notify.length != 0) {
-          this.message = this.name.value + " is visiting your flat for " + this.purpose.value;
-          for (this.index = 0; this.index < this.notify.length; this.index++) {
-            if (this.index == this.notify.length - 1) {
-              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
-            }
-            else {
-              this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ",";
-            }
+      let formData = new FormData();
+      formData.append("name", this.signupForm.get("name").value);
+      formData.append("phone", this.signupForm.get("mobile").value)
+      formData.append("address", this.signupForm.get("address").value);
+      formData.append("block", this.signupForm.get("block").value);
+      formData.append("purpose", this.signupForm.get("purpose").value);
+      formData.append("flat_num", this.signupForm.get("flatNumber").value);
+      formData.append("image", this.fileObject, this.imageName);
+      this.repository.addVisitor(formData).subscribe(res => {
+          this.visitor = res;
+          if(!res.notify){
+            this.navCtrl.pop();
+            loader.dismiss();
+          }else {
+            this.notify = res.notify;
           }
-          this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
-              this.navCtrl.pop();
-              loader.dismiss();
-              this.toast.success("Visitor Added Successfully and Sms Sent");
-            },
-            err => {
-              loader.dismiss();
-              this.toast.error("Visitor added, Sms not sent");
-            })
-        }
-        loader.dismiss();
-      },
-      err => {
-        loader.dismiss();
-        this.toast.error(err.error.error);
-      })
+          if (this.checked) {
+            this.sendVisitorID();
+            this.showVisitorID();
+          }
+
+          if (this.notify.length != 0) {
+            this.message = this.name.value + " is visiting your flat for " + this.purpose.value;
+            for (this.index = 0; this.index < this.notify.length; this.index++) {
+              if (this.index == this.notify.length - 1) {
+                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone;
+              }
+              else {
+                this.mobileNumber = this.mobileNumber + this.notify[this.index].phone + ",";
+              }
+            }
+            this.repository.sendSms(this.mobileNumber, this.message).subscribe(res => {
+                this.navCtrl.pop();
+                loader.dismiss();
+                this.toast.success("Visitor Added Successfully and Sms Sent");
+                this.showHome();
+              },
+              err => {
+                this.navCtrl.pop();
+                loader.dismiss();
+                this.toast.error("Visitor added, Sms not sent");
+              })
+          } else {
+            this.navCtrl.pop();
+            loader.dismiss();
+          }
+        },
+        err => {
+          loader.dismiss();
+          this.toast.error(err.error.error);
+        })
+    });
   }
 
   getImage() {
     const options: CameraOptions = {
-      quality: 50,
+      quality           : 50,
       correctOrientation: true,
-      saveToPhotoAlbum: false
+      saveToPhotoAlbum  : false
     };
 
     this.camera.getPicture(options).then((imagePath) => {
@@ -302,9 +318,9 @@ export class AddVisitorPage implements OnInit {
     return new Promise(function (onFulfill, onReject) {
       (<any>window).resolveLocalFileSystemURL(path, (res) => {
         res.file((resFile) => {
-          let reader = new FileReader();
+          let reader    = new FileReader();
           reader.onload = (evt: any) => {
-            onFulfill(new Blob([evt.target.result], { type: type }));
+            onFulfill(new Blob([evt.target.result], {type: type}));
           };
           reader.readAsArrayBuffer(resFile);
         });
@@ -319,9 +335,9 @@ export class AddVisitorPage implements OnInit {
   showVisitorID() {
     console.log("show", this.visitor);
     const alert = this.alertCtrl.create({
-      title: this.visitor.name,
+      title   : this.visitor.name,
       subTitle: "Your unique id is 1. Keep this ID for future use.",
-      buttons: ["OK"]
+      buttons : ["OK"]
     });
     alert.present();
   }
@@ -332,6 +348,10 @@ export class AddVisitorPage implements OnInit {
 
   toggleFV(event) {
     this.checked = event.value;
+  }
+
+  showHome() {
+    this.navCtrl.push(AdminHomePage);
   }
 
 }
