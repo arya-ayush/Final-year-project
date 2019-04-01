@@ -224,4 +224,11 @@ export class Service {
     return this.http.post(BASE_URL+ 'issues', data, {headers: this.getHeaders()});
   }
 
+  forgotPassword(data) : Observable<any> {
+    return this.http.post(BASE_URL + `forgot_password?email=${data.email}`,{});
+  }
+
+  changePassword(data) : Observable<any> {
+    return this.http.post(BASE_URL + 'change_password', data);
+  }
 }

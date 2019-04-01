@@ -151,4 +151,12 @@ export class Repository {
   registerComplain(data:any) : Observable<any> {
     return this.service.registerComplain(data);
   }
+
+  forgotPassword(data: any) : Observable<any> {
+    return this.service.forgotPassword(data);
+  }
+
+  changePassword(data: any) : Observable<any> {
+    return this.service.changePassword(data);
+  }
 }

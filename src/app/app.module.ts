@@ -34,6 +34,8 @@ import { FrequentVisitorPage } from "../pages/Admin/frequent-visitor";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { OneSignal } from "@ionic-native/onesignal";
 import { AddComplaintsPage } from '../pages/register-complaint';
+import { ForgotPasswordPage } from '../pages/forgot-password';
+import { ChangePasswordPage } from '../pages/change-password';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { AddComplaintsPage } from '../pages/register-complaint';
     AddFlatOwnerPage,
     AddVisitorPage,
     FrequentVisitorPage,
-    AddComplaintsPage
+    AddComplaintsPage,
+    ForgotPasswordPage,
+    ChangePasswordPage
   ],
   imports: [
     BrowserModule,
@@ -71,7 +75,9 @@ import { AddComplaintsPage } from '../pages/register-complaint';
     AddFlatOwnerPage,
     AddVisitorPage,
     FrequentVisitorPage,
-    AddComplaintsPage
+    AddComplaintsPage,
+    ForgotPasswordPage,
+    ChangePasswordPage
   ],
   providers: [
     SocialSharing,
