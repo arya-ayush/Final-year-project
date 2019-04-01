@@ -55,12 +55,19 @@ export class AddComplaintsPage {
   }
 
   registerCompalin() {
+    let allComplains = [];
+    const complains = JSON.parse(localStorage.getItem("complaint"));
+    if(complains) {
+      allComplains.push(...complains)
+    }
     const loader = this.loadingCtrl.create({
       content: 'Sending your complaint.'
     });
     loader.present();
     console.log(this.complainForm.value);
     this.repository.registerComplain(this.complainForm.value).subscribe(res => {
+      allComplains.push(this.complainForm.value);
+      localStorage.setItem("complaint", JSON.stringify(allComplains));
       loader.dismiss();
       this.navCtrl.pop();
       this.toast.success("Complaint registered successfully");

@@ -159,4 +159,8 @@ export class Repository {
   changePassword(data: any) : Observable<any> {
     return this.service.changePassword(data);
   }
+
+  getComplaints() : Observable<any> {
+    return this.service.getComplaints();
+  }
 }
