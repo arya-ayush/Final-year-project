@@ -220,4 +220,8 @@ export class Service {
     });
   }
 
+  registerComplain(data) : Observable<any> {
+    return this.http.post(BASE_URL+ 'issues', data, {headers: this.getHeaders()});
+  }
+
 }

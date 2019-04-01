@@ -4,8 +4,6 @@ import { Visitor } from "../../app/models/visitor";
 import { Repository } from "../../app/repository/repository";
 import { AlertController, LoadingController, NavController } from "ionic-angular";
 import { ToastService } from "../../app/services/toast-service";
-import { Camera } from "@ionic-native/camera";
-import { File } from "@ionic-native/file";
 
 @Component({
   selector: 'page-admin-home',
@@ -58,8 +56,7 @@ export class FrequentVisitorPage implements OnInit {
   visitor: Visitor;
 
   constructor(public navCtrl: NavController, private toast: ToastService, private alertCtrl: AlertController,
-              private repository: Repository, private loadingCtrl: LoadingController, private camera: Camera,
-              private file: File) {
+              private repository: Repository, private loadingCtrl: LoadingController) {
     this.visitorID = new FormControl(null, [Validators.required, Validators.minLength(1)]);
     this.frequentVisitorForm = new FormGroup({
       visitorID: this.visitorID,

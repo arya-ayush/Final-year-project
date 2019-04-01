@@ -147,4 +147,8 @@ export class Repository {
       return res;
     })
   }
+
+  registerComplain(data:any) : Observable<any> {
+    return this.service.registerComplain(data);
+  }
 }

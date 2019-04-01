@@ -33,6 +33,7 @@ import { File } from '@ionic-native/file';
 import { FrequentVisitorPage } from "../pages/Admin/frequent-visitor";
 import { SocialSharing } from "@ionic-native/social-sharing";
 import { OneSignal } from "@ionic-native/onesignal";
+import { AddComplaintsPage } from '../pages/register-complaint';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { OneSignal } from "@ionic-native/onesignal";
     NotificationMemberPage,
     AddFlatOwnerPage,
     AddVisitorPage,
-    FrequentVisitorPage
+    FrequentVisitorPage,
+    AddComplaintsPage
   ],
   imports: [
     BrowserModule,
@@ -68,7 +70,8 @@ import { OneSignal } from "@ionic-native/onesignal";
     NotificationMemberPage,
     AddFlatOwnerPage,
     AddVisitorPage,
-    FrequentVisitorPage
+    FrequentVisitorPage,
+    AddComplaintsPage
   ],
   providers: [
     SocialSharing,

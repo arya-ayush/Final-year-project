@@ -10,6 +10,7 @@ import {Repository} from "../../app/repository/repository";
 import {OneSignal} from "@ionic-native/onesignal";
 import { LoginPage } from "../login";
 import { window } from "rxjs/operators";
+import { AddComplaintsPage } from '../register-complaint';
 
 @Component({
   selector: 'page-home',
@@ -72,6 +73,10 @@ export class HomePage {
   logout() {
     this.repository.adminLogout();
     this.navCtrl.setRoot(LoginPage)
+  }
+
+  openComplaintPage() {
+    this.navCtrl.push(AddComplaintsPage);
   }
 
 }
