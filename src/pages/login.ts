@@ -5,6 +5,7 @@ import {ToastService} from "../app/services/toast-service";
 import {HomePage} from "./home/home";
 import {AdminHomePage} from "./Admin/home";
 import {Repository} from "../app/repository/repository";
+import { ForgotPasswordPage } from './forgot-password';
 
 @Component({
   selector: 'page-login',
@@ -48,6 +49,7 @@ import {Repository} from "../app/repository/repository";
             </div>
           </ion-grid>
         </form>
+        <p style="text-align: end;margin-right: 20px" (click)="forgotPassword()">Forgot password</p>
       </div>
     </ion-content>
   `,
@@ -105,4 +107,7 @@ export class LoginPage {
 
   }
 
+  forgotPassword() {
+    this.navCtrl.push(ForgotPasswordPage);
+  }
 }

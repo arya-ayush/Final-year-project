@@ -5,6 +5,7 @@ import {User} from "../models/user";
 import {Observable} from "rxjs/Observable";
 import {Member} from "../models/member";
 import { Block, Visitor } from "../models/visitor";
+import { of } from 'rxjs/observable/of';
 
 const BASE_URL = 'http://vallabh-final.herokuapp.com/';
 const MSG_BASE_URL = 'http://control.msg91.com/api/';
@@ -220,4 +221,20 @@ export class Service {
     });
   }
 
+  registerComplain(data) : Observable<any> {
+    return this.http.post(BASE_URL+ 'issues', data, {headers: this.getHeaders()});
+  }
+
+  forgotPassword(data) : Observable<any> {
+    return this.http.post(BASE_URL + `forgot_password?email=${data.email}`,{});
+  }
+
+  changePassword(data) : Observable<any> {
+    return this.http.post(BASE_URL + 'change_password', data);
+  }
+
+  getComplaints() : Observable<any> {
+    const complaints = JSON.parse(localStorage.getItem("complaint"));
+    return of(complaints);
+  }
 }
